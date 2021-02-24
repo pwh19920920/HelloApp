@@ -1,0 +1,424 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width"/>
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>我的</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <style>
+        html,body{background:#fff;}
+        #header{background:#3498fe;position:relative;}
+        .time{display:flex;position:absolute;bottom:45px;left:12%;color:white;align-items:center;}
+        .time-item{margin:0 2px 0 8px;position:relative;}
+        .time-item img{height:48px;}
+        .time-item .num{position:absolute;color:#2a91fe;top:0;height:48px;line-height:48px;width:31.7px;text-align:center;font-size:33px;font-weight:300;}
+        .arrow{width:20px;float:right;position:absolute;right:16px;bottom:54px;}
+      
+        .aui-list{background-image:none;}
+        .aui-list .aui-list-item-inner{height:0;min-height: 2.5rem}
+        .aui-media-list-item-inner .aui-list-item-inner{height:auto}
+        .aui-list .aui-list-item-right{width:100%;text-align:right;}
+        .aui-list.aui-list-in .aui-list-item:last-child{background-position:0.75rem bottom;}
+        .setting{height:8rem;width:100%;background:white;display:flex;flex-direction:column;justify-content:center;}
+        .setting .desc{font-size:0.9rem;font-weight:500;color:#666;}
+        .setting .login-btn{background-color:#19bdf7!important;width:5rem;border-radius:0.1rem;margin-top:0.5rem;font-weight:300;}
+        .aui-grid-nine{overflow:auto;background:#ffffff;position:relative;}
+        .aui-grid-nine li{padding:0.55rem;}
+        .aui-grid-nine img{width:2.2rem;margin:auto}
+
+        /*margin: 0 auto 0.4rem;}*/
+        .aui-grid-nine p{font-size:0.65rem;color:#888;}
+        .aui-list-item-label-icon{width:auto!important;padding-right:0.5rem!important}
+        .aui-list-item-label-icon img{width:1.1rem}
+    </style>
+
+</head>
+<body>
+    <div id="header" onclick="countdown()">
+        <img src="../../image/ic_setting_bg.png">
+        <div class="time">
+            <span>考试倒计时</span>
+            <div class="time-item">
+                <img src="../../image/ic_setting_header_time.png">
+                <div class="num" id="num0">0</div>
+            </div>
+            <div class="time-item">
+                <img src="../../image/ic_setting_header_time.png">
+                <div class="num" id="num1">0</div>
+            </div>
+            <div class="time-item">
+                <img src="../../image/ic_setting_header_time.png">
+                <div class="num" id="num2">0</div>
+            </div>
+            <span style="margin-left: 6px">天</span>
+        </div>
+        <img class="arrow" src="../../image/ic_setting_header_arrow.png">
+    </div>
+    <div class="aui-content aui-margin-b-15">
+        <div class="h10"></div>
+        <ul class="aui-list aui-list-in">
+            <li class="aui-list-item" onclick="org('成绩查询', 'https://query.ruankao.org.cn/score/main')">
+                <div class="aui-list-item-label-icon">
+                    <img src="../../image/ic_setting_score.png" style="width: 1.05rem;">
+                </div>
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title">
+                        成绩查询
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item" onclick="org('证书查询', 'https://query.ruankao.org.cn/certificate/main')">
+                <div class="aui-list-item-label-icon">
+                    <img src="../../image/ic_setting_certificate.png" style="width: 1.2rem;">
+                </div>
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title">
+                        证书查询
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item" onclick="loadWebView('guide', true)">
+                <div class="aui-list-item-label-icon">
+                    <img src="../../image/ic_setting_guide.png" style="width: .95rem;">
+                </div>
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title">
+                        软考报考指南
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item" onclick="reset()">
+                <div class="aui-list-item-label-icon">
+                    <img src="../../image/ic_setting_reset.png">
+                </div>
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title">
+                        重置做题记录
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item" onclick="haoping(2)" id="haoping">
+                <div class="aui-list-item-label-icon">
+                    <img src="../../image/ic_setting_haoping.png">
+                </div>
+                <div class="aui-list-item-inner  aui-list-item-arrow">
+                    <div class="aui-list-item-title">
+                        给“软考通”点赞
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item" onclick="share()">
+                <div class="aui-list-item-label-icon">
+                    <img src="../../image/ic_setting_recommend.png">
+                </div>
+                <div class="aui-list-item-inner  aui-list-item-arrow">
+                    <div class="aui-list-item-title">
+                        推荐“软考通”给好友
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item" onclick="problem()">
+                <div class="aui-list-item-label-icon">
+                    <img src="../../image/ic_setting_feedback.png">
+                </div>
+                <div class="aui-list-item-inner aui-list-item-arrow" >
+                    <div class="aui-list-item-title">
+                        帮助与反馈
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item" onclick="openHomeWin('set')">
+                <div class="aui-list-item-label-icon">
+                    <img src="../../image/ic_setting_set.png">
+                </div>
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title">
+                        设置
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/data.js"></script>
+<script type="text/javascript" src="../../script/practice.js"></script>
+<script type="text/javascript" src="../../script/layer.js"></script>
+<script type="text/javascript">
+    var layerIndex;
+    var talkingData;
+    var subject;
+
+    function goback(){
+        api.closeWin("setting")
+    }
+    
+    apiready = function() {
+        var header = $api.byId('header');
+        $api.fixStatusBarAdd(header, 25);
+
+        talkingData = api.require('talkingData');
+        subject = get("subject")
+
+        api.addEventListener({
+            name:'viewappear'
+        }, function(ret, err){ 
+            initView();
+        });
+        initView();
+
+        var date = get("countdown_date", get("countdown"));
+        if (isNotEmpty(date)) {
+            var days = showCountdown(JSON.parse(date))
+            if (days < -30) {
+                showCountdown(JSON.parse(get("countdown")))
+            }
+        }
+    };
+
+    function initView(){
+        
+    }
+
+    function switchChange(mode){
+        save(mode + "_mode", $api.byId(mode).checked ? 1 : 0)
+
+        talkingData.onEvent({
+            eventId: "mode_" + mode,
+            parameters: {
+                checked: $api.byId(mode).checked
+            }
+        });
+    }
+
+    function share(){
+        talkingData.onEvent({
+            eventId: "share",
+            parameters: {
+                mode: "open"
+            }
+        });
+        var dialogBox = api.require('dialogBox');
+        dialogBox.actionMenu ({
+            rect:{
+                h: 125
+            },
+            tapClose: true,
+            items:[
+            {
+                text: '微信好友',
+                icon: 'widget://image/ic_share_wx.png'
+            },
+            {
+                text: '朋友圈',
+                icon: 'widget://image/ic_share_pyq.png'
+            },
+            {
+                text: 'QQ好友',
+                icon: 'widget://image/ic_share_qq.png'
+            },
+            {
+                text: 'QQ空间',
+                icon: 'widget://image/ic_share_qqkj.png'
+            },
+            {
+                text: '更多',
+                icon: 'widget://image/ic_share_more.png'
+            }
+            ],
+            styles:{
+                bg:'#FFF',
+                column: 5,
+                itemText: {
+                    color: '#000',
+                    size: 12,
+                    marginT:3
+                },
+                itemIcon:{
+                    size:45
+                }
+            }
+        }, function(ret){
+            dialogBox.close({
+                dialogName: 'actionMenu'
+            });
+            if (ret.eventType == 'click') {
+                switch(ret.index){
+                    case 0:
+                        shareWx('session')
+                        break;
+                    case 1:
+                        shareWx('timeline')
+                        break;
+                    case 2:
+                        shareQQ('QFriend')
+                        break;
+                    case 3:
+                        shareQQ('QZone')
+                        break;
+                    case 4:
+                        shareMore()
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+    }
+
+    function shareWx(scene){
+        var title = scene == "session" ? '软件水平考试,推荐你用软考通' : '软件水平考试,推荐你用软考通，最新题库，真的很不错！'
+        var wx = api.require('wx');
+        wx.shareWebpage({
+            scene: scene,
+            title: title,
+            description: '最新题库，聚合各种刷题模式，真的很不错！',
+            thumb: 'widget://image/icon_share.png',
+            contentUrl: 'https://a.app.qq.com/o/simple.jsp?pkgname=me.hxyfj.rk'
+        }, function(ret, err) {});
+    }
+
+    function shareQQ(type){
+        var title = type == "QFriend" ? '软件水平考试,推荐你用软考通' : '软件水平考试,推荐你用软考通，最新题库，真的很不错！'
+        var qq = api.require('QQPlus');
+        qq.shareNews({
+            url: 'https://a.app.qq.com/o/simple.jsp?pkgname=me.hxyfj.rk',
+            title: title,
+            description: '最新题库，聚合各种刷题模式，真的很不错！',
+            imgUrl: 'http://static.miplus.cloud/rk/icon_share.png',
+            type: type
+        },function(ret,err){});
+    }
+
+    function shareMore(){
+        var sharedModule = api.require('shareAction');
+        sharedModule.share({
+            path: 'https://a.app.qq.com/o/simple.jsp?pkgname=me.hxyfj.rk',
+            type: 'url',
+            text: '软考通，包含最新真题，赶快前往下载吧'
+        });
+    }
+
+    function reset(){
+        talkingData.onEvent({eventId: "reset"});
+
+        api.confirm({
+            title: '您确定要重置练习记录吗？',
+            msg: '该操作将清空所有数据, 不能撤销哦\n亲，您再考虑一下吧\n',
+            buttons: ['确定', '我再想想']
+        }, function(ret, err) {
+            if (ret.buttonIndex == 1) {
+                api.confirm({
+                    title: '您真的确定要重置练习记录吗',
+                    msg: '重置记录后数据不能还原哦！',
+                    buttons: ['重置吧', '我再想想']
+                }, function(ret, err) {
+                    if (ret.buttonIndex == 1) {
+                        var db = api.require('db');
+                        db.executeSql({
+                            name: 'rk',
+                            sql: 'update question set finish = 0, collect = 0, note = 0, wrong = 0, temp_answer = "" where subject = ' + subject
+                        }, function(ret, err) {
+                            if (ret.status) {
+                                api.sendEvent({name: 'homeUpdate'});
+                                toast('重置成功')
+                            } else {
+                                alert(JSON.stringify(err));
+                            }
+                        });
+                        // 清空做题进度
+                        for (var i = data[subject + 'A'][0]; i <= data[subject + 'A'][1]; i++) {
+                            removeProgress(i)
+                        }
+                        for (var i = data[subject + 'B'][0]; i <= data[subject + 'B'][1]; i++) {
+                            removeProgress(i)
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    function countdown(){
+        talkingData.onEvent({eventId: "countdown"});
+
+        var nowDate = get("countdown_date")
+        if (isEmpty(nowDate)) {
+            nowDate = new Date();
+        } else {
+            nowDate = JSON.parse(nowDate)
+            nowDate = nowDate.year + "-" + nowDate.month + "-" + eval(nowDate.day + 1) + " 00:00:00";
+            nowDate = nowDate.replace(/\-/g, "/");
+            nowDate = new Date(nowDate);
+        }
+        api.openPicker({
+            type: 'date_time',
+            date: nowDate,
+            title: '选择考试时间'
+        }, function(ret, err) {
+            if (ret) {
+                save("countdown_date", ret)
+                showCountdown(ret)
+            } else {
+                alert(JSON.stringify(err));
+            }
+        });
+    }
+
+    function showCountdown(date){
+        if (isEmpty(date)) {
+            return 0;
+        }
+        var days = getDays(date)
+        if (isEmpty(days)) {
+            return 0;
+        }
+        var tempDays = days;
+        if (days > 999) {
+            toast("时间范围过大，请重新设置考试时间")
+            $api.text($api.byId('countdown'),"考试倒计时");
+        } else if (days < 0){
+            days = 0;
+        }
+        var countdown = (Array(3).join(0) + days).slice(-3);
+        $api.text($api.byId('num0'),countdown[0]);
+        $api.text($api.byId('num1'),countdown[1]);
+        $api.text($api.byId('num2'),countdown[2]);
+
+        return tempDays;
+    }
+
+    function getDays(date){
+        var examTime = date.year + "-" + date.month + "-" + date.day + " 00:00:00";
+        examTime = examTime.replace(/\-/g, "/");
+        var examDate =new Date(examTime);
+        var betweenTime = examDate.getTime() - new Date().getTime();
+        var days = parseInt(betweenTime / (1000 * 3600 * 24))
+        return betweenTime > 0 ? days + 1 : days;
+    }
+
+    function problem(){
+        // if (get('showProblem') == 1) {
+            openHomeWin('problem')
+        // } else {
+            // openHomeWin('feedback')
+        // }
+    }
+
+    function org(title, url){
+        api.openWin({
+            name: 'org',
+            url: './org.html',
+            pageParam: {
+                title: title,
+                url: url
+            },
+            allowEdit: true
+        });
+    }
+</script>
+</html>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?><widget id="A6027789637200" security="false" version="0.0.1">
+  <name>软考通</name>
+  <description>软件水平考试题库</description>
+  <author email="miplus2018@163.com" href="http://rk.miplus.cloud">开发者</author>
+  <content src="index.html"/>
+  <preference name="pageBounce" value="false"/>
+  <preference name="appBackground" value="rgba(0,0,0,0.0)"/>
+  <preference name="windowBackground" value="rgba(0,0,0,0.0)"/>
+  <preference name="frameBackgroundColor" value="rgba(0,0,0,0.0)"/>
+  <preference name="hScrollBarEnabled" value="true"/>
+  <preference name="vScrollBarEnabled" value="true"/>
+  <preference name="autoLaunch" value="true"/>
+  <preference name="fullScreen" value="false"/>
+  <preference name="autoUpdate" value="false"/>
+  <preference name="smartUpdate" value="false"/>
+  <preference name="debug" value="false"/>
+  <preference name="statusBarAppearance" value="true"/>
+  <preference name="querySchemes" value="mqq,mqqapi,wechat,weixin"/>
+  <preference name="useWKWebView" value="true"/>
+  <permission name="readPhoneState"/>
+    
+  
+  
+  <permission name="fileSystem"/>
+  <permission name="internet"/>
+  
+  
+  <access origin="*"/>
+  <feature name="TalkingData">
+      <param name="logEnable" value="false"/>
+      <param name="exceptionReportEnabled" value="true"/>
+      <param name="channel" value="Android"/>
+  </feature>
+  <feature name="wx">
+    <param name="urlScheme" value="wx09a2acb310459e94"/>
+    <param name="apiKey" value="wx09a2acb310459e94"/>
+    <param name="apiSecret" value="6ddfa7cf2b521ad8021dc685845ea9b4"/>
+  </feature>
+  <feature name="QQPlus">
+    <param name="urlScheme" value="tencent1110176273"/>
+    <param name="apiKey" value="1110176273"/>
+ </feature>
+</widget>

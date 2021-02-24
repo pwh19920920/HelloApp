@@ -1,0 +1,94 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width"/>
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>热门问题</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+
+    <style>
+        html,body{background-color:#f8f8f8}
+    </style>
+
+</head>
+<body>
+    <div id="whiteHeader">
+        <header id="header" class="aui-bar aui-bar-nav header-gray">
+            <a class="aui-pull-left aui-btn" onclick="goback()">
+                <span class="aui-iconfont aui-icon-left"></span>
+            </a>
+            <div class="aui-title">热门问题</div>
+        </header>
+    </div>
+    <div class="h10"></div>
+    <div class="aui-content aui-margin-b-15">
+        <ul class="aui-list aui-list-in" id="list">
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title"></div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="aui-btn aui-btn-info submit" onclick="openHomeWin('feedback')">我要反馈/建议</div>
+</body>
+<script id="tpl" type="text/html">
+<ul>
+    <%for(var i = 0; i < list.length; i++) {%>
+    <li class="aui-list-item">
+        <div class="aui-list-item-inner aui-list-item-arrow" onclick="openDetailWin('<%:=i%>')">
+            <div class="aui-list-item-title"><%:=list[i].title%></div>
+        </div>
+    </li>
+    <%}%>
+</ul>
+</script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/template.js"></script>
+<script type="text/javascript">
+    // var tpl = document.getElementById('tpl').innerHTML;
+    // var html = template(tpl, {list: [{"title":"sdf"},{"title":"sdf"},{"title":"sdf"},{"title":"sdf"}]});
+    // $api.html($api.byId("list"), html);
+    var list;
+
+    function goback() {
+        api.closeWin({name: 'problem'});
+    }
+
+    apiready = function() {
+        var header = $api.byId('whiteHeader');
+        fixWhiteStatusBar(header);
+
+        show()
+    };
+
+    function show(){
+        $api.html($api.byId("list"), "");
+        http('/feedback/problems', 'get', {}, false, function(data){
+            list = data;
+            var tpl = document.getElementById('tpl').innerHTML;
+            var html = template(tpl, {list: list});
+            $api.html($api.byId("list"), html);
+        });
+    }
+
+    function openDetailWin(i){
+        if (list[i].type == 0) {
+            api.openWin({
+                name: 'problem_content',
+                url: './problem_content.html',
+                pageParam: {
+                    title: list[i].title,
+                    content: list[i].content
+                }
+            });
+        } else if (list[i].type == 1) {
+            loadWebView(list[i].content)       
+        }
+    }
+</script>
+</html>

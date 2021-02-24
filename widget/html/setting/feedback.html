@@ -1,0 +1,163 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="copyright" content="www.apicloud.com" />
+<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+<meta name="format-detection" content="telephone=no" />
+<title>留言反馈</title>
+<link rel="stylesheet" type="text/css" href="../../css/api.css" />
+<link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+
+<style>
+    input[type="text"],textarea{height:40px;font-size:15px;color:#8E8C8C;width:100%;background-color:#fff;position:relative;box-sizing:border-box;padding:10px 14px;}
+    input[type="text"]::-webkit-input-placeholder{color:#ccc;}
+    .feedback{padding-top:10px;}
+    .contact{margin-bottom:12px}
+    .content{height:5.4rem;line-height:20px}
+    .title{color:#666;margin:14px 0 8px;padding-left:12px;}
+    .textarea-div{position:relative;height:9.4rem;background:white}
+    .textarea-div img{position:absolute;height:3.1rem;bottom:10px;left:12px}
+    .submit{border-radius:0.4rem;background:#339afe!important;}
+    .or{text-align:center;height:20px;color:#727272;margin:2px 4% 12px;}
+    .divider{width:41%;background-color:#727272;height:1px;margin-top:12px}
+    .recommend{margin:10px 0;font-size:13px;padding:0 26px;text-align:center;color:#666}
+    .recommend p{line-height: 20px;font-size: 13px}
+</style>
+
+</head>
+<body>
+    <div id="whiteHeader">
+        <header class="aui-bar aui-bar-nav header-gray">
+            <a class="aui-pull-left aui-btn aui-btn-info" onclick="goback()">
+                <span class="aui-iconfont aui-icon-left"></span>
+            </a>
+            <div class="aui-title">留言反馈</div>
+        </header>
+    </div>
+    <form class="feedback">
+        <div class="title">
+            联系方式（选填)
+        </div>
+        <input type="text" placeholder="QQ or 手机" id="contact" name="contact" class="contact">
+        <div class="title">
+            您的建议
+        </div>
+        <div class="textarea-div">
+            <textarea placeholder="在这里，你可以吐槽软考通，也可以描述你期待的功能。&#13;&#10;PS：如果APP或题库存在问题,请注明科目、题目等信息,这样方便我们定位问题，尽早解决~" id="content" name="content" class="content"></textarea>
+            <img src="../../image/ic_addpic.png" id="pic" onclick="upload()">
+        </div>
+        <div class="aui-btn aui-btn-info submit" onclick="feedback()">提交</div>
+        <div class="or">
+            <div class="divider fl"></div>
+            or
+            <div class="divider fr"></div>
+        </div>
+    </form>
+    <div class="recommend">
+        <!-- <p class="recommed-text" style="font-weight: bold;color: #555">如有紧急问题请联系客服QQ：<span id="qq">7336726</span></p>
+        <br> -->
+        <p class="recommed-text">软考通目前可能存在bug或是功能不完善</p>
+        <p class="recommend-text">但我们仍在不断努力变得更好</p>
+        <p class="recommed-text">软考通的更新迭代不会停止</p>
+        <p class="recommed-text">希望大家多多吐槽，多多指点</p>
+        <br>
+        <p class="recommed-text">无论是什么天马行空的想法</p>
+        <p class="recommed-text">只要你敢提，我们就敢做！</p>
+    </div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/data.js"></script>
+<script type="text/javascript">
+    var picUrl;
+
+    function goback(){
+        api.closeWin({name:'feedback'});
+    }
+
+    function feedback(){
+        var contact = $api.val($api.byId('contact'));
+        var content = $api.val($api.byId('content'));
+        if(content == ''){
+            toast('请填写您要反馈的内容哦');
+            return;
+        }
+        if (isNotEmpty(picUrl)) {
+            content = content + ",picUrl = " + picUrl;
+        }
+        var params = {contact:contact,content:content,subject:get("subject")};
+        http('/feedback/create', 'post', params, true, function(data){
+            toast('反馈成功，感谢您的反馈');
+            // 清空文本框内容
+            $api.val($api.byId('contact'),'');
+            $api.val($api.byId('content'),'');
+            $api.attr($api.byId("pic"), "src", "../../image/ic_addpic.png")
+        });
+    }
+  
+    apiready = function() {
+        var header = $api.byId('whiteHeader');
+        fixWhiteStatusBar(header);
+
+        // $api.text($api.byId('qq'), get('serviceQQ', 7336726));
+    };
+
+    function upload(){
+        api.actionSheet({
+            cancelTitle: '取消',
+            buttons: ['相册', '拍照']
+        }, function(ret, err) {
+            var index = ret.buttonIndex;
+            if (index == '1') {
+                getApiPicture('album')
+            } else if (index == '2'){
+                getApiPicture('camera')
+            }
+        });
+    }
+
+    function getApiPicture(way){
+        api.getPicture({
+            sourceType: way,
+            encodingType: 'jpg',
+            mediaValue: 'pic',
+            destinationType: 'base64',
+            saveToPhotoAlbum: false
+        }, function(ret, err) {
+            if (ret) {
+                // 处理退出相机的情况
+                if (isEmpty(ret.data)) {
+                    return;
+                }
+                api.showProgress({
+                    text: '图片上传中...',
+                });
+                
+                api.ajax({
+                    url : "http://rk.miplus.cloud/util/upload",
+                    method: "post",
+                    data: {
+                        files: {"file": ret.data}
+                    }
+                }, function(ret, err) {
+                    api.hideProgress();
+                    if (ret) {
+                        if(ret.code == 1){
+                            picUrl = ret.data;
+                            $api.attr($api.byId("pic"), "src", ret.data)
+                        } else {
+                            toast(ret.message)
+                        }
+                    } else {
+                        toast("图片上传失败,请重试");
+                    }
+                });
+            } else {
+                // alert(JSON.stringify(err));
+            }
+        });
+    }
+</script>
+</html>

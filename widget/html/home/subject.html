@@ -1,0 +1,212 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width"/>
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>科目选择</title>
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <style>
+        html,body{background: white;}
+        .subject-remind{width: 100%;margin:16px 10px 16px 10px;display: flex;justify-content: flex-start;align-items: center;}
+        .subject-remind img{width: 4%;    margin-right: 5px;}
+        .subject-remind p{margin-left: 3px;color: #FF8C00;font-size: 14px;}
+        .tab-bar{width: 100%;height: 30px;padding: 0 10px;}
+        .tab-bar ul{height: 100%;display: flex;justify-content: flex-start;align-items: center;}
+        .tab-bar li{width: 11%;height: 100%;margin: 0 5%;font-size: 0.7rem;font-weight: bold;display: flex;justify-content: center;align-items: flex-start;}
+        .tab-content{width: 100%;display: none;}
+    </style>
+
+</head>
+<body>
+<div class="subject-remind" id="header">
+    <img src="../../image/light_bulb.png">
+    <p>请点选你备考的考试科目</p>
+    <img src="../../image/ic_pop_close.svg" style="position: absolute;right: 0.6rem;" onclick='goback()'>
+</div>
+<div class="subject-content">
+  <div class="tab-bar">
+    <ul>
+      <li class="tab" id="tab1" onclick="changeTab(1)">高级</li>
+      <li class="tab" id="tab2" style="color:#339afe;border-bottom:1px solid #339afe" onclick="changeTab(2)">中级</li>
+      <li class="tab" id="tab3" onclick="changeTab(3)">初级</li>
+    </ul>
+  </div>
+  <div class="tab-content" id="tab1-content">
+    <div class="aui-content aui-margin-b-15">
+        <ul class="aui-list aui-list-in">
+            <li class="aui-list-item aui-list-item-middle" onclick="changeSubject(1)">
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title subject-name">系统分析师</div>
+                </div>
+            </li>
+            <li class="aui-list-item" onclick="changeSubject(2)">
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title subject-name">系统架构设计师</div>
+                </div>
+            </li>
+            <li class="aui-list-item" onclick="changeSubject(3)">
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title subject-name">网络规划设计师</div>
+                </div>
+            </li>
+            <li class="aui-list-item" onclick="changeSubject(4)">
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title subject-name">系统规划与管理师</div>
+                </div>
+            </li>
+            <li class="aui-list-item" onclick="changeSubject(5)">
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title subject-name">信息系统项目管理师</div>
+                </div>
+            </li>
+        </ul>
+    </div>
+  </div>
+  <div class="tab-content" id="tab2-content" style="display:block;">
+    <div class="aui-content aui-margin-b-15">
+        <ul class="aui-list aui-list-in">
+            <li class="aui-list-item aui-list-item-middle" onclick="changeSubject(6)">
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title subject-name">软件设计师</div>
+            </li>
+            <li class="aui-list-item" onclick="changeSubject(7)">
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title subject-name">网络工程师</div>
+                </div>
+            </li>
+            <li class="aui-list-item" onclick="changeSubject(8)">
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title subject-name">软件评测师</div>
+                </div>
+            </li>
+            <li class="aui-list-item" onclick="changeSubject(9)">
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title subject-name">信息系统监理师</div>
+                </div>
+            </li>
+            <li class="aui-list-item" onclick="changeSubject(10)">
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title subject-name">信息安全工程师</div>
+                </div>
+            </li>
+            <li class="aui-list-item" onclick="changeSubject(11)">
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title subject-name">电子商务设计师</div>
+                </div>
+            </li>
+            <li class="aui-list-item" onclick="changeSubject(12)">
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title subject-name">数据库系统工程师</div>
+                </div>
+            </li>
+            <li class="aui-list-item" onclick="changeSubject(13)">
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title subject-name">嵌入式系统设计师</div>
+                </div>
+            </li>
+            <li class="aui-list-item" onclick="changeSubject(14)">
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title subject-name">多媒体应用设计师</div>
+                </div>
+            </li>
+            <li class="aui-list-item" onclick="changeSubject(15)">
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title subject-name">信息系统管理工程师</div>
+                </div>
+            </li>
+            <li class="aui-list-item" onclick="changeSubject(16)" style="margin-bottom: 20px">
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title subject-name">系统集成项目管理工程师</div>
+                </div>
+            </li>
+        </ul>
+    </div>
+  </div>
+  <div class="tab-content" id="tab3-content">
+    <div class="aui-content aui-margin-b-15">
+        <ul class="aui-list aui-list-in">
+            <li class="aui-list-item aui-list-item-middle" onclick="changeSubject(17)">
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title subject-name">程序员</div>
+            </li>
+            <li class="aui-list-item" onclick="changeSubject(18)">
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title subject-name">网络管理员</div>
+                </div>
+            </li>
+            <li class="aui-list-item" onclick="changeSubject(19)">
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title subject-name">信息处理技术员</div>
+                </div>
+            </li>
+        </ul>
+    </div>
+  </div>
+</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    function goback(){
+        api.closeWin();
+    }
+
+    function changeTab(rank){
+        var tabList = document.getElementsByClassName('tab');
+        for(var i = 0;i <tabList.length;i++){
+            var tab = tabList[i];
+            if(tab == document.getElementById('tab'+rank)){
+                tab.style.color = '#339afe';
+                tab.style.borderBottom = '1px solid #339afe';
+            }else{
+                tab.style.color = '#212121';
+                tab.style.borderBottom = 'none';
+            }   
+        }
+        var tabConList = document.getElementsByClassName('tab-content');
+        for (var i = 0; i < tabConList.length; i++) {
+            var tabCon = tabConList[i];
+            if(tabCon == document.getElementById('tab' + rank + '-content')){
+                tabCon.style.display = 'block';
+            }else{
+                tabCon.style.display = 'none';
+            }
+        }
+    }
+ 
+    function highlight(subject){
+        var subList = document.getElementsByClassName('subject-name');
+        for(var i = 0;i < subList.length;i++){
+            if(subject == i + 1){
+                subList[i].style.color = '#339afe';
+            }else{
+                subList[i].style.color = '#444';
+            }
+        }
+    }
+
+    function changeSubject(subject){
+        api.sendEvent({
+            name: 'changeSubject',
+            extra: {
+                subject: subject
+            }
+        });
+        save("subject", subject)
+        goback()
+    }
+ 
+
+    apiready = function() {
+        var header = $api.byId('header');
+        $api.fixStatusBar(header);
+
+        var subject = get("subject");
+        highlight(subject)
+        changeTab(subject <= 5 ? 1 : (subject <= 16 ? 2 : 3))
+    };
+</script>
+</html>

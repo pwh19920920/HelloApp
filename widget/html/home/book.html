@@ -1,0 +1,130 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width"/>
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>笔记速览</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <style>
+        .content{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+        .time{width:3.3rem;text-align:right;}
+    </style>
+
+</head>
+<body>
+    <div id="whiteHeader" style="position: fixed;">
+        <header class="aui-bar aui-bar-nav header-gray">
+            <a class="aui-pull-left aui-btn aui-btn-info" onclick="goback()">
+                <span class="aui-iconfont aui-icon-left"></span>
+            </a>
+            <div class="aui-title">笔记速览</div>
+        </header>
+    </div>
+    <section class="aui-content-padded aui-margin-b-15" id="wrapper">
+        <!-- <div class="aui-card-list">
+            <div class="aui-card-list-content-padded">
+                内容区域，卡片列表布局样式可以实现APP中常见的各类样式
+            </div>
+            <div class="aui-card-list-footer">
+                <div class="content">数据库系统的三级模式不包括（&nbsp;）。</div>
+                <div class="time">今天</div>
+            </div>
+        </div>
+        <div class="aui-card-list">
+            <div class="aui-card-list-content-padded">
+                内容区域，卡片列表布局样式可以实现APP中常见的各类样式
+            </div>
+            <div class="aui-card-list-footer">
+                <div class="content">小刘用Excel 2010制作了一份员工档案表，但经理的计算机中只安装了Office 2003，能让经理正常打开员工档案表的最优操作方法是（&nbsp;）。</div>
+                <div class="time">19-04-21</div>
+            </div>
+        </div> -->
+    </section>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/template.js"></script>
+<script type="text/javascript">
+    var db;
+
+    function goback() {
+        api.closeWin({
+            name: 'book'
+        });
+    }
+
+    function bookShow() {
+        $api.html($api.byId('wrapper'), "");
+        db.selectSql({
+            name: 'rk',
+            sql: 'SELECT * FROM question where ' + api.pageParam.condition
+        }, function(ret, err) {
+            if (ret.status) {
+                list = ret.data;
+                var today = format(new Date().getTime());
+                var yesterday = format(new Date().getTime() - 86400000);
+                for (var i = 0; i < list.length; i++) {
+                    if (isEmpty(list[i].book_time)) {
+                        continue;
+                    }
+                    var timeStr = format(list[i].book_time);
+                    if (timeStr == today) {
+                        list[i].time = '今天'
+                    } else if (timeStr == yesterday) {
+                        list[i].time = '昨天'
+                    } else {
+                        list[i].time = timeStr
+                    }
+                }
+                var tpl = template(document.getElementById('itemsTpl').innerHTML, {list: list});
+                $api.html($api.byId('wrapper'), tpl);
+            } else {
+                alert("网络异常,code:64\n请重启APP后再试");
+            }
+        });
+    }
+
+    apiready = function() {
+        var header = $api.byId('whiteHeader');
+        fixWhiteStatusBar(header);
+
+        var headerH = $api.offset(header).h;
+        $api.css($api.byId('wrapper'),'margin-top:' + eval(headerH + 10)  + "px");
+
+        db = api.require('db');
+
+        bookShow()
+        api.addEventListener({
+            name: 'bookShow'
+        }, function(ret, err) {
+            bookShow();
+        });
+    };
+
+    function format(timestamp) {
+        var time = new Date(eval(timestamp));
+        var y = time.getFullYear() - 2000;
+        var m = time.getMonth()+1;
+        var d = time.getDate();
+        return y + '-' + add0(m) + '-' + add0(d);
+    }
+
+    function add0(m){return m<10?'0'+m:m }
+</script>
+<script id="itemsTpl" type="text/html">
+    <%for(var i = 0; i < list.length; i++) {%>
+    <div class="aui-card-list" onclick="openQuestionDetail('<%:=list[i].id%>')">
+        <div class="aui-card-list-content-padded">
+            <%:=list[i].rem%>
+        </div>
+        <div class="aui-card-list-footer">
+            <div class="content"><%:=list[i].content%></div>
+            <div class="time"><%:=list[i].time%></div>
+        </div>
+    </div>
+    <%}%>
+</script>
+</html>

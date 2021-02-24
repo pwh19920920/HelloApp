@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="copyright" content="www.apicloud.com" />
+<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+<title>详情</title>
+<link rel="stylesheet" type="text/css" href="../../css/api.css" />
+<link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+<style>
+html,body{width:100%;min-height:100%;background:#fff;color:#444}
+.wrap{margin:1rem 5% 65px;}
+.hr{margin:0.5rem 0;height:1px;background-size:100% 1px;background-repeat:no-repeat;background-position:bottom;background-image:linear-gradient(0,#dddddd,#dddddd 50%,transparent 50%);background-image:-webkit-linear-gradient(90deg,#dddddd,#dddddd 50%,transparent 50%);}
+#title{font-size:0.8rem;font-weight:bold;color:#111;}
+#content{line-height:1.4rem;font-size:0.7rem;}
+</style>
+</head>
+<body>
+    <div id="whiteHeader">
+        <header class="aui-bar aui-bar-nav header-gray">
+            <a class="aui-pull-left aui-btn" onclick="goback()">
+                <span class="aui-iconfont aui-icon-left"></span>
+            </a>
+            <div class="aui-title">热门问题</div>
+        </header>
+    </div>
+    <div class="wrap">
+        <div id="title">
+            <!-- 为什么手机上不能做操作题？ -->
+        </div>
+        <div class="hr"></div>
+        <div id="content">
+            <!-- 由于解答操作题必须要安装做操作题的环境软件，各科目操作题的环境软件不同，比如office科目需要安装office2010，C语言科目需要安装Visual C++ 2010 Express等，而这些环境软件只能在windows电脑上安装运行，其他系统或手机设备是无法使用的，所以操作题只能在windows电脑上做题。 -->
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    function goback(){
+        api.closeWin({name:'problem_content'});
+    }
+
+   apiready = function() {
+        var header = $api.byId('whiteHeader');
+        fixWhiteStatusBar(header);
+        // 接收数据
+        var title = api.pageParam.title;
+        var content = api.pageParam.content;
+        $api.html($api.byId('title'), title);
+        $api.html($api.byId('content'), content);
+    };
+</script>
+</html>

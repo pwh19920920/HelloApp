@@ -1,0 +1,145 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width"/>
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>考试结果</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <style>
+        html,body{background-color:#fafafa}
+        .aui-grid{margin-top:12px}
+        .aui-row img{width:45px;margin:0 auto 10px;}
+        .aui-col-xs-6 .aui-grid-label{color:#888;font-size:0.8rem;}
+        .aui-col-xs-4 .aui-grid-label{color:#555;}
+        .divider{height:1px;background:#eee;width:90%;margin:0 auto;}
+        .score-num{font-size:2.2rem;font-weight:normal;color:red}
+        .time{color:#555}
+        .time-num{font-size:2.2rem;font-weight:normal;}
+    </style>
+
+</head>
+<body>
+    <div id="whiteHeader">
+    	<header class="aui-bar aui-bar-nav header-gray">
+    	    <a class="aui-pull-left aui-btn" onclick="goback()">
+    	        <span class="aui-iconfont aui-icon-left"></span>
+    	    </a>
+    	    <div class="aui-title">考试结果</div>
+    	</header>
+    </div>
+    <img src="../../image/img_exam_banner.png">
+    <section class="aui-grid aui-margin-b-15">
+        <div class="aui-row">
+            <div class="aui-col-xs-6">
+                <div class="aui-grid-label">得分</div>
+                <div>
+                    <span id="score" class="score-num">20</span>&nbsp;分
+                </div>    
+            </div>
+            <div class="aui-col-xs-6">
+                <div class="aui-grid-label">时间</div>
+                <div class="time">
+                    <span id="minute_num" class="time-num">0</span>
+                    分
+                    <span id="second_num" class="time-num">0</span>
+                    秒
+                </div> 
+            </div>
+        </div>
+        <div class="divider"></div>
+        <div class="aui-row">
+            <div class="aui-col-xs-4" onclick="review(1)">
+                <img src="../../image/ic_exam_result_note.png">
+                <div class="aui-grid-label">仅看错题</div>
+            </div>
+            <div class="aui-col-xs-4" onclick="review(2)">
+                <img src="../../image/ic_exam_result_all.png">
+                <div class="aui-grid-label">查看试卷</div>
+            </div>
+            <div class="aui-col-xs-4" onclick="startExam()">
+                <img src="../../image/ic_exam_result_again.png">
+                <div class="aui-grid-label">重新考试</div>
+            </div>
+        </div>
+    </section>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var talkingData;
+    var time = new Date().getTime();
+
+    function goback() {
+        waitAsync(function(){
+            api.closeWin();
+        })
+    }
+
+    apiready = function() {
+        var header = $api.byId('whiteHeader');
+        fixWhiteStatusBar(header);
+
+        talkingData = api.require('talkingData');
+
+        $api.text($api.byId('score'),api.pageParam.score);
+        var time = api.pageParam.time;
+        $api.text($api.byId('minute_num'), parseInt(time / 60));
+        $api.text($api.byId('second_num'), time % 60);
+
+        api.addEventListener({
+            name: 'keyback'
+        }, function(ret, err) {
+            goback()
+        });
+    };
+
+    function review(type){
+        waitAsync(function(){
+            // 拷贝
+            var data = api.pageParam.data.slice(0);
+            if (type == 1) {
+                for (var i = 0; i < data.length; i++) {
+                    if (data[i].answer == data[i].exam_answer) {
+                        data.splice(i--, 1)
+                    }
+                }
+            }
+            api.openWin({
+                name: 'practice',
+                url: './practice.html',
+                pageParam: {
+                    data: data,
+                    module: "exam_note",
+                    condition: "exam_note",
+                    title: '考试结果'
+                }
+            });
+        })
+    }
+
+    function startExam(){
+        waitAsync(function(){
+            openHomeWin('exam')
+        })
+    }
+
+    function waitAsync(execute){
+        if (new Date().getTime() - time > 2000) {
+            execute()
+            return;
+        }
+        api.showProgress({
+            title: '玩命加载中...'
+        });
+
+        setTimeout(function () {
+            api.hideProgress();
+            
+            execute()
+        }, 1000);
+    }
+</script>
+</html>

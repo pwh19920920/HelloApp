@@ -1,0 +1,119 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width"/>
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>关于软件</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <style>
+        html,body{background-color:#f8f8f8}
+        .aui-list .aui-list-item-right{width:80%;text-align:right;}
+        .icon{width:20%;margin:1rem auto 0;}
+        .version{text-align:center;padding:0.3rem 0 0.4rem;font-size:0.6rem;}
+        .footer{position:fixed;bottom:0.5rem;text-align:center;color:#bbb;font-size:0.6rem;width:100%;font-weight:300;}
+    </style>
+
+</head>
+<body>
+    <div id="whiteHeader">
+    	<header class="aui-bar aui-bar-nav header-gray">
+    	    <a class="aui-pull-left aui-btn" onclick="goback()">
+    	        <span class="aui-iconfont aui-icon-left"></span>
+    	    </a>
+    	    <div class="aui-title">关于软件</div>
+    	</header>
+    </div>
+    <img src="../../image/icon.png" class="icon" id="logo">
+    <div class="version">软件版本: <span id="version">2.2.0</span></div>
+    <div class="aui-content aui-margin-b-15">
+        <div class="h10"></div>
+        <ul class="aui-list aui-list-in">
+             <li class="aui-list-header">
+                关于软件
+            </li>
+            <li class="aui-list-item" onclick="openHomeWin('agreement')">
+                <div class="aui-list-item-inner aui-list-item-arrow" >
+                    <div class="aui-list-item-title">
+                        用户协议
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item" onclick="openHomeWin('privacy')">
+                <div class="aui-list-item-inner aui-list-item-arrow" >
+                    <div class="aui-list-item-title">
+                        隐私声明
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item" onclick="copy('deviceId')">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-title">
+                        设备码
+                    </div>
+                    <div id="deviceId" class="aui-list-item-right">
+                        
+                    </div>
+                </div>
+            </li>
+            <!-- <li class="aui-list-item" onclick="copy('qq')">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-title">
+                        客服QQ
+                    </div>
+                    <div class="aui-list-item-right" id="qq">
+                        7336726
+                    </div>
+                </div>
+            </li> -->
+        </ul>
+    </div>
+    <div class="footer">
+        Copyright © 幂加网络科技. All Rights Reserved
+    </div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var talkingData;
+    var deviceId;
+    var qq;
+
+    function goback() {
+        api.closeWin({name: 'about'});
+    }
+
+    apiready = function() {
+        var header = $api.byId('whiteHeader');
+        fixWhiteStatusBar(header);
+
+        deviceId = getDeviceId();
+        // qq = get('serviceQQ', 7336726)
+
+        $api.text($api.byId('deviceId'),deviceId);
+        $api.text($api.byId('version'), version);
+        // $api.text($api.byId('qq'), qq);
+     
+        talkingData = api.require('talkingData');
+    };
+
+    function copy(module){
+        var code = qq;
+        if (module == 'deviceId') {
+            code = deviceId;
+        }
+        var clipBoard = api.require('clipBoard');
+        clipBoard.set({
+            value: code
+        }, function(ret, err) {
+            if (ret) {
+                toast("复制成功");
+            } else {
+                // toast("自动复制失败.");
+            }
+        });
+    }
+</script>
+</html>

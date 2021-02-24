@@ -1,0 +1,166 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>入口</title>
+</head>
+<body>
+    
+</body>
+<script type="text/javascript" src="./script/api.js"></script>
+<script type="text/javascript" src="./script/common.js"></script>
+<script type="text/javascript">
+    var configRefreshTime;
+
+    apiready = function(){
+        // var fs = api.require('fs');
+        // fs.removeSync({
+        //     path: 'box://res/rk_190002.db'
+        // });
+
+    	permission('storage')
+        // 基本配置
+        config(true);
+
+        showMain();
+
+        api.addEventListener({
+            name:'resume'
+        }, function(ret, err){
+            var now = new Date().getTime();
+            if (isNotEmpty(configRefreshTime) && (now - configRefreshTime) < 5 * 60 * 1000) {
+                return;
+            }
+            setTimeout(function(){
+                configRefreshTime = now;
+                config(false)
+            },1000)    
+        });
+    };
+
+    function config(isFirst){
+        var isFirstAudit = false;
+        if (getPlatform() == 2) {
+            if (isEmpty(get("isAuditForViewHidden"))) {
+                save("isAuditForViewHidden", true)
+                isFirstAudit = true;
+            }
+        }
+        http('/config/info', 'get', {"isFirst": get("isFirst", true)}, false, function(data){
+            save("isFirst", false)
+            save("isAuditForViewHidden", data.isAudit)
+            save("isAuditReal", data.isAudit)
+            if (isFirstAudit && !data.isAudit) {
+                setTimeout(function () {
+                    api.sendEvent({
+                        name: 'auditShow',
+                    });
+                }, 500);
+            }
+            save("developMode", data.developMode)
+            save("analysisHidden", data.analysisHidden)
+            save("countdown", data.countdown)
+            save("serviceQQ", data.serviceQQ)
+            if (isNotEmpty(data.deviceId)) {
+                save("deviceId", data.deviceId)
+            }
+            // 版本
+            var version = data.version;
+            if (isFirst && isNotEmpty(version) && version.indexUpdate) {
+                if (version.forceUpdate) {
+                    api.alert({
+                        title : '当前有新的版本哦',
+                        msg : version.indexDesc,
+                        buttons : ['立刻安装']
+                    }, function(ret, err) {
+                       downloadVersion(version.downloadUrl)
+                    });
+                } else {
+                    api.confirm({
+                        title : '当前有新的版本哦',
+                        msg : version.indexDesc,
+                        buttons : ['立刻安装', '稍后安装']
+                    }, function(ret, err) {
+                        if (ret.buttonIndex == 1) {
+                           downloadVersion(version.downloadUrl)
+                        }
+                    });
+                }
+            }
+            // 错题
+            save("correctQuestions", data.correctQuestions)
+        });
+    }
+
+    function showMain(){
+        api.openWin({
+            name: 'main',
+            url: 'html/main.html',
+            slidBackEnabled: false
+        });
+    }
+
+    function permission(perm){
+    	var has = hasPermission(perm);
+    	if(!has || !has[0] || !has[0].granted){
+    		reqPermission(perm, function(ret){
+    			if(!ret.list || !ret.list[0] || !ret.list[0].granted){
+					api.confirm({
+					    title: '权限申请',
+					    msg: '请开启存储权限，否则我们无法为您下载题库等学习内容',
+					    buttons: ['开启', '狠心拒绝']
+					}, function(ret, err) {
+					    if(1 == ret.buttonIndex){
+					    	permission(perm);
+					    } else {
+					    	api.closeWidget({
+			                    silent: true
+			                });
+					    }
+					});
+    			}
+	    	});
+    	}
+    }
+
+    function reqPermission(one_per, callback){
+    	var perms = new Array();
+		perms.push(one_per);
+    	
+     	api.requestPermission({
+     		list: perms,
+     		code: 100001
+     	}, function(ret, err){
+ 			callback(ret);
+     	});
+    }
+
+    function hasPermission(one_per){
+    	var perms = new Array();
+		perms.push(one_per);
+     	var rets = api.hasPermission({
+     		list:perms
+     	});
+     	return rets;
+    }
+
+    function downloadVersion(url){
+        if (getPlatform() == 1) {
+           api.openWin({
+                name: 'update',
+                url: './html/update.html',
+                pageParam: {
+                    url: url
+                }
+            });
+        }
+        if (api.systemType == "ios") {
+            api.installApp({
+                appUri :  url
+            });
+        }
+    }
+</script>
+</html>

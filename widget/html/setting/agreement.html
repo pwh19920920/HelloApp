@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width"/>
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>用户协议</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <style>
+        html,body{background-color:#f8f8f8}
+        .content{font-size:0.6rem;line-height:1.1rem;padding:0.5rem 1rem 1rem;}
+    </style>
+
+</head>
+<body>
+    <div id="whiteHeader" style="position: fixed;">
+    	<header class="aui-bar aui-bar-nav header-gray">
+    	    <a class="aui-pull-left aui-btn" onclick="goback()">
+    	        <span class="aui-iconfont aui-icon-left"></span>
+    	    </a>
+    	    <div class="aui-title">用户协议</div>
+    	</header>
+    </div>
+    <div id="content" class="content">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;本“软件”题库来源自公开渠道习题进行挑选摘录，如有侵权，请联系客服处理。<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.&nbsp;本“软件”针对不同机型，所实现的功能略有不同，具体应用体现以相关机型为准。<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.&nbsp;本“软件”是由义乌市幂加网络科技有限公司开发。“软件”的一切版权，以及与“软件”相关的信息内容，包括但不限于:图标、图饰、图表、色彩、界面设计、版面框架等均受著作权法和国际著作权条约以及其他知识产权法律法规的保护。<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.&nbsp;不得对本“软件”进行反向工程、反向汇编、反向编译等修改行为，非经幂加网络科技授权开发并正式发布的其它任何由本“软件”衍生的软件均属非法，下载、安装、使用此类软件，将可能导致不可预知的风险，由此产生的一切法律责任与纠纷一概与幂加网络科技无关，幂加网络科技不对非官方版本软件提供客服支持。<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.&nbsp;不得利用本“软件”发表、传送、传播、储存违反国家法律、危害国家安全、祖国统一、社会稳定的内容，或任何不当的、侮辱诽谤的、淫秽的、暴力的及任何违反国家法律法规政策的内容。<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5.&nbsp;使用本“软件”涉及到互联网服务和移动通信服务，可能会受到各个环节不稳定因素的影响，存在因不可抗力、计算机病毒、黑客攻击、系统不稳定、用户所在位置、用户关机以及其他任何网络、技术、通信线路等原因造成的服务中断或不能满足用户要求的风险，用户须明白并自行承担以上风险，用户因此不能发送或接受阅读消息，或接、发错消息，幂加网络科技及合作单位不承担任何责任。<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;6.&nbsp;使用本“软件”可能存在来自他人匿名或冒名的含有威胁、诽谤、令人反感或非法内容的信息的风险，用户须明白并自行承担以上风险，幂加网络科技及合作单位不对任何有关信息真实性、适用性、合法性承担责任。<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7.&nbsp;用户因第三方如通讯线路故障、技术问题、网络、系统不稳定性及其他各种不可抗力原因而遭受的经济损失，幂加网络科技及合作单位不承担责任。<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8.&nbsp;因技术故障等不可抗事件影响到程序以及服务正常运行的，幂加网络科技及合作单位承诺在第一时间内与相关单位配合，及时处理进行修复，但用户因此而遭受的经济损失，幂加网络科技及合作单位不承担责任。<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;9.&nbsp;用户之间通过本“软件”与其他用户交往，因受误导或欺骗而导致或可能导致的任何心理、生理上的伤害以及经济上的损失，由过错方依法承担所有责任，一概与幂加网络科技及合作单位无关。<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10.&nbsp;用户不得自行修改本“软件”的相关配置文件，否则造成的后果由用户自行承担。<br>
+    </div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    function goback() {
+        api.closeWin({name: 'agreement'});
+    }
+
+    apiready = function() {
+        var header = $api.byId('whiteHeader');
+        fixWhiteStatusBar(header);
+        var headerH = $api.offset(header).h;
+        $api.css($api.byId('content'),'margin-top:' + eval(headerH + 10)  + "px");
+    };
+</script>
+</html>

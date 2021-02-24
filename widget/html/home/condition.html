@@ -1,0 +1,197 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width"/>
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>随机测验</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+
+</head>
+<body>
+    <div id="whiteHeader">
+    	<header class="aui-bar aui-bar-nav header-gray">
+            <a class="aui-pull-left aui-btn aui-btn-info" onclick="goback()">
+    	        <span class="aui-iconfont aui-icon-left"></span>
+    	    </a>
+    	    <div class="aui-title">设置智能练习条件</div>
+    	</header>
+    </div>
+    <ul class="aui-list aui-form-list" style="margin-top: 8px">
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-label">
+                    关键词
+                </div>
+                <div class="aui-list-item-input">
+                    <input type="text" placeholder="请输入关键词（选填）" id="keyword">
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-label">
+                    题目类型
+                </div>
+                <div class="aui-list-item-input search-input">
+                    <label id="label_-1"><input class="aui-radio" type="radio" name="type" value="-1" id="type_-1">&nbsp;&nbsp;不限</label>
+                    <label><input class="aui-radio" type="radio" name="type" value="1" id="type_1" checked>&nbsp;&nbsp;选择题</label>
+                    <label><input class="aui-radio" type="radio" name="type" value="2" id="type_2">&nbsp;&nbsp;案例题</label>
+                    <label id="label_3"><input class="aui-radio" type="radio" name="type" value="3" id="type_3">&nbsp;&nbsp;论文题</label>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-label">
+                    答题情况
+                </div>
+                <div class="aui-list-item-input search-input">
+                    <label><input class="aui-radio" type="radio" name="finish" value="-1" id="finish_-1" checked>&nbsp;&nbsp;不限</label>
+                    <label><input class="aui-radio" type="radio" name="finish" value="0" id="finish_0">&nbsp;&nbsp;未做题</label>
+                    <label><input class="aui-radio" type="radio" name="finish" value="1" id="finish_1">&nbsp;&nbsp;已做题&nbsp;&nbsp;&nbsp;</label>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-label">
+                    正确率
+                </div>
+                <div class="aui-list-item-input">
+                    <span id="showPercent" style="width: 27%;">无限制</span>
+                    <div class="aui-range" style="width: 64%;">
+                        <input type="range" class="aui-range" value="100" max="100" min="0" step="1" id="percent" oninput="showPercent()" style="width: 100%;"/>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-label">
+                    试题数目
+                </div>
+                <div class="aui-list-item-input">
+                    <span id="showCount" style="width: 10%">50</span>
+                    <div class="aui-range" style="width: 81%;">
+                        <input type="range" class="aui-range" value="50" max="100" min="1" step="1" id="count" oninput="showCount()" style="width: 100%;"/>
+                    </div>
+                </div>
+            </div>
+        </li>
+    </ul>
+    <div class="aui-btn aui-btn-info submit" onclick="startPractice()">提交</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var subject;
+
+    function goback() {
+        api.closeWin({
+            name: 'condition'
+        });
+    }
+
+    function startPractice() {
+        var count = $api.val($api.byId('count'));
+        var percent = eval($api.val($api.byId('percent')));
+        var type = $api.val($api.dom("input[name='type']:checked"));
+        var finish = $api.val($api.dom("input[name='finish']:checked"));
+        var condition = getQueryCondition(type, finish);
+
+        var keyword = $api.val($api.byId('keyword'));
+        if (isNotEmpty(keyword)) {
+            condition = condition + " and content like '%" + keyword + "%' ";
+        }
+        if (percent != 100) {
+            condition = condition + " and (finish == 0 or ((finish - wrong) * 100 / finish < {0})) ".format(percent + 1);
+        }
+        condition = condition + " and subject = {0} ".format(subject)
+        // 保存记录
+        save("conditionKeyword", keyword)
+        save("conditionType", type)
+        save("conditionFinish", finish)
+        save("conditionCount", count)
+        save("conditionPercent", percent)
+
+        api.openWin({
+            name: 'practice',
+            url: './practice.html',
+            pageParam: {
+                condition: condition + ' ORDER BY RANDOM() limit ' + count,
+                title: '随机测验',
+                module: 'condition'
+            },
+            allowEdit: true
+        });
+    }
+
+    function showCount(){
+        $api.text($api.byId("showCount"), $api.val($api.byId('count')))
+    }
+
+    function showPercent(){
+        var percent = eval($api.val($api.byId('percent')));
+        if (percent == 100) {
+            $api.text($api.byId("showPercent"), "无限制")
+        } else {
+            $api.text($api.byId("showPercent"), "低于" + (percent + 1) + "%")
+        }
+    }
+
+    apiready = function() {
+        var header = $api.byId('whiteHeader');
+        fixWhiteStatusBar(header);
+        initData();
+  
+        $api.css($api.byId(subject > 5 ? "label_-1" : "label_3"), "display:none")
+    };
+
+    function initData(){
+        subject = get("subject");
+
+        var keyword = get("conditionKeyword")
+        if (isNotEmpty(keyword)) {
+            $api.val($api.byId('keyword'), keyword)
+        }
+        var type = get("conditionType", 1)
+        $api.byId('type_' + type).checked =  1
+        var finish = get("conditionFinish", -1)
+        $api.byId('finish_' + finish).checked =  1
+
+        var count = get("conditionCount", 50)
+        $api.val($api.byId('count'), count)
+        showCount()
+
+        var percent = get("conditionPercent", 100)
+        $api.val($api.byId('percent'), percent)
+        showPercent()
+    }
+
+    function getQueryCondition(type, finish){
+        // 题目类型
+        type = type == -1 ? "" : " type = " + type;
+        // 答题情况
+        if (finish == -1) {
+            finish = "";
+        } else if (finish == 0) {
+            finish = ' finish = 0 ';
+        } else {
+            finish = ' finish > 0 ';
+        }
+        // 请求
+        var condition;
+        if (finish == "" && type == "") {
+          condition = ' id > 0 '
+        } else if (finish != "" && type != "") {
+          condition = type + ' and ' + finish;
+        } else {
+          condition = type + finish;
+        }
+        return condition;
+    }
+</script>
+</html>

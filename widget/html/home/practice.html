@@ -1,0 +1,706 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width"/>
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>答题页面</title>
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/swiper.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/draft.css" />
+	<style>
+		div#page *{-webkit-user-select:auto;}
+		html,body{background:#fff;}
+		.aui-bar-nav.aui-bar-light .aui-bar-btn-item.aui-active{background-color:#2d2d2d;}
+		.aui-bar-nav.aui-bar-light .aui-bar-btn-item{border-color:#2d2d2d;}
+		.aui-bar-light{color:#2d2d2d;background:none!important}
+		.aui-bar-btn.aui-bar-btn-round .aui-bar-btn-item:first-child{border-top-left-radius:0.25rem;border-bottom-left-radius:0.25rem;}
+		.aui-bar-btn.aui-bar-btn-round .aui-bar-btn-item:last-child{border-top-right-radius:0.25rem;border-bottom-right-radius:0.25rem;}
+		.aui-bar-nav .aui-bar-btn{min-height:1.5rem;padding:0 0.2rem;}
+		.question-type{display:inline-block;height:21px;vertical-align:middle;padding-right:6px;margin-top:-3px;}
+		.question_2 .question-type{padding-right:7px;}
+		.question{padding:90px 0 20px;}
+		@media screen and  (max-width:320px){
+			.question p.option img{max-width:80%;}
+			.aui-bar-nav .aui-title{left:4.5rem;right:4.5rem;}
+		}
+		@media screen and  (min-width:321px){
+			.question p.option img{max-width:85%;}
+		}
+		.question p{color:#444;padding:0 1rem;word-break:break-all;word-wrap:break-word;}
+		.question p.option:active{background-color:#EAEAEA;}
+		.question p.option img:first-child{width:30px;margin-right:10px;vertical-align:top;}
+		.question p.option img{display:inline-block!important;vertical-align:middle;}
+		.question p.content{margin-bottom:14px;word-wrap:break-word;line-height:28px;}
+		.question_2 p.content{line-height:24px;}
+		.question input{border:1px solid #ccc;margin:30px auto 20px;height:1.8rem;width:90%;padding:0 8px;border-radius:8px;}
+		.question textarea{border:1px solid #ccc;overflow:auto;margin:19px auto 10px;height:6rem;width:90%;padding:8px 10px;border-radius:8px;font-size:0.7rem;color:#444;}
+		.question textarea::-webkit-input-placeholder{font-size:0.65rem}
+		.option{line-height:30px;margin-bottom:4px;word-wrap:break-word;padding:7px 20px!important;}
+		.analysis{margin-top:20px;display:none;line-height:28px;}
+		.analysis_2{margin-top:30px;display:none;line-height:24px;}
+		.checked-true i{color:#03a9f4;}
+		.checked-false i{color:#ff5d5d;}
+		.checked-default i{color:#6caae6;}
+		.show-answer p{pointer-events:none;}
+		.show-answer .analysis{display:block;}
+		.show-answer .analysis_2{display:block;}
+		.show-answer .analysis_2 .analysis_content{margin-bottom: 1rem}
+		.show-answer .submit{display: none}
+		#count_msg{display:inline-block;}
+		#footer{border-top:1px solid #eee;font-size:15px;color:#777;padding:10px 0;position:fixed;top:auto;bottom:0;width:100%;z-index:100;background:#fff}
+		#footer > div{display:inline-block;padding:0 12px 0 15px;}
+        #footer img{display:inline-block;width:19px;vertical-align:middle;}
+		#footer .fr img{width:27px;}
+		#footer .fr span{padding:0 12px 0 3px;}
+		#footer span{vertical-align:middle;white-space: nowrap;}
+		.card{border-radius:10px 10px 0 0}
+		.card p{text-align:right;padding:6px 8px 6px 0;}
+		.card li div{width:40px;height:40px;background-color:#fff;color:#bbb;border-radius:20px;border:1px solid #e5e6e7;margin:6px auto;}
+		.card li div.margin{background-color:#fff;border:none;height:20px;}
+		.card li div span{height:40px;line-height:40px;display:block;text-align:center;}
+		.card li div span:active{background:#e5e6e7}
+		.card ul{height:300px;overflow:scroll;}
+		.card li.true-index div{border:1px solid #339afe;color:#339afe !important;}
+		.card li.false-index div{border:1px solid #e27b7b;color:#e27b7b !important;}
+		.card li.checked-index div{border:1px solid #aaa;color:#aaa !important;}
+		.card li.current-index div{border:1px solid #666;color:#666 !important;}
+		.aui-list .setting{background:#fff}
+		.or{text-align:center;height:20px;margin-bottom:15px;color:#555}
+		.divider-fr{float:right;width:38%;}
+		.divider-fl{float:left;width:38%;}
+		.divider{background-color:#eee;height:1px;margin-top:12px}
+		#exam_submit{display:none;color:#339afe;float:left;margin-left:30px;min-width: 58px}
+		#exam_submit img{width: 25px;margin-right: -2px;}
+		.rem{text-align:center;color:#777}
+		.rem div{border:1px solid #339afe;color:#339afe;height:1.6rem;line-height:1.6rem;border-radius:0.4rem;margin:0.6rem auto;font-size:0.65rem;display:inline-block;padding:0 0.5rem;}
+		.font-css{width:100%;text-align:right;}
+		.aui-bar-nav.aui-bar-light .aui-iconfont{color:#333}
+		.note{display:none;float:left;margin-left:0.5rem;}
+		.note > div{display:inline-block;margin-right:0.8rem;}
+
+		/** 字体大小 */
+		body{font-size:0.8rem}
+		.question p{font-size:0.85rem;}
+		.analysis p{font-size:0.8rem;}
+		.question_2 p{font-size:0.7rem}
+		.analysis_2 p{font-size:0.7rem}
+		#fontsize_normal{color:#19bdf7}
+		.gray{background:#f6f6f6}
+		.analysis-header{display:flex;align-items:center;margin-bottom:12px;padding-top:20px}
+		.analysis-header-icon{width:5px;height:18px;background:#339afe;margin:0 8px 0 20px;border-radius:15px;}
+		.knowledge{display:flex;padding:0.8rem 1rem 0.1rem;font-size:0.7rem;color:#999;align-items:center;}
+		.knowledge-item{background:#f7f8fa;padding:4px 16px;color:#888;margin-left:6px;border-radius:25px;}
+		.statistics{padding:0.7rem 1rem 1rem;font-size:0.75rem;color:#555;}
+		.statistics-finish-count{color:#339afe;padding:0 4px;}
+		.statistics-wrong-count{color:#fd4f52;padding:0 4px;}
+		.submit{margin: 0.7rem 10% 0rem;}
+		.error{position:absolute;right:0.7rem;font-size:0.6rem;color:#999;}
+	</style>
+	<style>
+		html.night,body.night{background:#1d232f;height:100%;overflow-x:hidden;}
+		body.night .aui-bar-nav.aui-bar-light .aui-bar-btn-item.aui-active{background-color:#747f8a;color:#1d232f}
+		body.night .aui-bar-nav.aui-bar-light .aui-bar-btn-item{border-color:#747f8a;color:#747f8a;}
+		body.night .aui-iconfont{color:#747f8a!important;}
+		body.night .question p{color:#747f8a}
+		body.night .or{color:#747f8a;}
+		body.night #header{border-bottom:none;}
+		body.night #whiteHeader{background:#1d232f;border-bottom:1px solid #242c3c;}
+		body.night #footer{background:#1d232f;border-top:1px solid #39383c;}
+		body.night .divider{background-color:#39383c;}
+		body.night .question p.option:active{background-color:#202732;}
+		body.night .checked-true i{color:#0a7caf}
+		body.night .checked-false i{color:#b34545}
+		body.night .practice-true-count{color:#0e70ce;}
+		body.night .practice-false-count{color:#ad2c2c;}
+		body.night .statistics-finish-count{color:#0e70ce;}
+		body.night .statistics-wrong-count{color:#ad2c2c;}
+		body.night #exam_submit{color:#06648e}
+		body.night .rem div{border:1px solid #06648e;color:#06648e;}
+		.time{line-height:1.3rem;width:7rem;margin:0 auto;color:#333;font-size:0.7rem;display:flex;align-items:center;justify-content:center;}
+		.time span.aui-iconfont{font-size:0.7rem;margin-right:0.35rem;margin-top:1px;}
+		body.night .submit{background:#0d5ba7!important;box-shadow:none;color:#adb4bb!important;}
+		body.night .time{color:#747f8a!important}
+		body.night .gray{background:#2a303a!important}
+		body.night .knowledge,.statistics{color:#747f8a!important}
+		body.night .knowledge-item{background:#747f8a!important;color:#1d232f!important}
+		body.night .analysis-header{color:#747f8a!important}
+		body.night .analysis-header-icon{background:#0e70ce!important}
+		body.night .question textarea{color:#747f8a;border:1px solid #747f8a;}
+		body.night .question textarea::-webkit-input-placeholder{color:#747f8a;}
+		body.night .question .error{color: #656f79;}
+</style>
+</head>
+<body>
+	<div id="whiteHeader" style="position: fixed;">
+		<header id="header" class="aui-bar aui-bar-nav aui-bar-light">
+		    <a class="aui-pull-left aui-btn" onclick="goback()" style="padding: 0 1.5rem 0 0.5rem;">
+		        <span class="aui-iconfont aui-icon-left"></span>
+		    </a>
+		    <div class="aui-title">
+		        <div id="mode" class="aui-bar aui-bar-btn aui-bar-btn-round">
+	        		<div class="aui-bar-btn-item aui-active">答题模式</div>
+	            	<div class="aui-bar-btn-item">背题模式</div>
+		        </div>
+		        <div id="exam_time" class="time" onclick="exam()" style="display: none;">
+					<span class="aui-iconfont aui-icon-date"></span>
+	            	倒计时&nbsp;<span id="time">30:00</span>
+	            </div>
+		    </div>
+		   	<a class="aui-pull-right aui-btn" onclick="setting()" style="padding: 0 0.7rem 0;">
+		        <span class="aui-iconfont aui-icon-gear"></span>
+		    </a>
+	     	<a class="aui-pull-right aui-btn" onclick="showDraft()" style="padding: 0 0.3rem 0;">
+		        <span class="aui-iconfont aui-icon-pencil"></span>
+		    </a>
+		</header>
+	</div>
+	<div id="page" class="swiper-container">
+	    <div id="question_list" class="swiper-wrapper" >
+	        <div class="swiper-slide">
+	        	<!-- <div class="question question_2">
+			        <p class="content"><img src="../../image/ic_question_type_2.png" class="question-type">Word文档的结构层次为“章-节-小节”，如章“1”为一级标题、节“1.1”为二级标题、小节“1.1.1”为三级标题，采用多级列表的方式已经完成了对第一章中章、节、小节的设置，如需完成剩余几章内容的多级列表设置，最优的操作方法是：</p>
+			        <textarea type="text" placeholder="请输入您的答案&#13;&#10;PS：该题是开放性试题，请提交答案后自核核对解析"></textarea>
+			        <div class="aui-btn aui-btn-info submit" onclick="operateChecked()">提交答案</div>
+			        <div class="analysis analysis_2" onclick="copyAnalysis()">
+			        	<div class="r8 gray"></div>
+			            <div class="analysis-header">
+			                <div class="analysis-header-icon"></div>
+			                <div>试题解析</div>
+			            </div>
+			            <p class="analysis_content">在Word中，用户可以将一种样式应用于某个选定的段落或字段，以使所选定的段落或字符具有这样样式所定义的格式。在编辑文档时，使用样式可以省去一些格式设置上的重复操作性，故本题答案为C。</p>
+			            <div class="r8 gray"></div>
+			            <div class="analysis-header">
+			                <div class="analysis-header-icon"></div>
+			                <div>学习笔记</div>
+			            </div>
+			            <p class="rem_content"></p>
+			            <div class="rem" onclick="rem()">
+			                <div class="rem_desc">暂无笔记，立即添加笔记</div>
+			            </div>
+			        </div>
+			        <div class="h50"></div>
+			    </div> -->
+			    <!-- <div class="question show-answer">
+			        <p class="content"><img src="../../image/ic_question_type_1.png" class="question-type">Word文档的结构层次为“章-节-小节”，如章“1”为一级标题、节“1.1”为二级标题、小节“1.1.1”为三级标题，采用多级列表的方式已经完成了对第一章中章、节、小节的设置，如需完成剩余几章内容的多级列表设置，最优的操作方法是：</p>
+			        <p class="option" onclick="checked(this, 'A')"><img src="../../image/ic_exam_a_normal.png">利用格式刷功能，分别复制第一章中的“章、节、小节”格式，并应用到其他章节对应段落</p>
+			        <p class="option" onclick="checked(this, 'B')"><img src="../../image/ic_exam_b_normal.png">复制第一章中的“章、节、小节”段落，分别粘贴到其他章节对应位置，然后替换标题内容</p>
+			        <p class="option" onclick="checked(this, 'C')"><img src="../../image/ic_exam_c_normal.png">将第一章中的“章、节、小节”格式保存为标题样式，并将其应用到其他章节对应段落</p>
+			        <p class="option" onclick="checked(this, 'D')"><img src="../../image/ic_exam_d_normal.png">逐个对其他章节对应的“章、节、小节”标题应用“多级列表”格式，并调整段落结构层次</p>
+			        <div class="analysis" onclick="copyAnalysis()">
+			        	<div class="r8 gray"></div>
+			            <div class="analysis-header">
+			                <div class="analysis-header-icon"></div>
+			                <div>试题解析</div>
+			                <div class="error">纠错</div>
+			            </div>
+			            <p class="analysis_content">在Word中，用户可以将一种样式应用于某个选定的段落或字段，以使所选定的段落或字符具有这样样式所定义的格式。在编辑文档时，使用样式可以省去一些格式设置上的重复操作性，故本题答案为C。</p>
+			            <div class="knowledge">
+			            	<div class="knowledge-title">知识点：</div>
+			            	<div class="knowledge-item">计算机基础</div>
+			            </div>
+			            <div class="statistics">
+			            	我做过<span class="statistics-finish-count">3</span>次，做错<span class="statistics-wrong-count">1</span>次。
+			            </div>
+			            <div class="r8 gray"></div>
+			            <div class="analysis-header">
+			                <div class="analysis-header-icon"></div>
+			                <div>学习笔记</div>
+			            </div>
+			            <p class="rem_content"></p>
+			            <div class="rem" onclick="rem()">
+			                <div class="rem_desc">暂无笔记，立即添加笔记</div>
+			            </div>
+			        </div>
+			        <div class="h50"></div>
+			    </div> -->
+			</div>
+	    </div>
+	</div>
+	<footer id="footer">
+		<div class="fl">
+		 	<div id="note" class="note">
+	        	<div onclick="deleteQuestion(true)">
+	        		<img src="../../image/ic_delete.png">
+	        	</div>
+	        	<div onclick="collect()">
+					<img id="collect_img_note" src="../../image/ic_star_normal.png">
+				</div>
+	        	<div onclick="noteSort()">
+	        		<img src="../../image/ic_note_sort.png">
+	        	</div>
+	        </div>
+			<div id="normal" onclick="collect()" style="display: inline-block;float: left;">
+				<img id="collect_img" src="../../image/ic_star_normal.png">
+	        	<span>收藏</span>
+			</div>
+	        <div id="exam_submit" onclick="exam()">
+        		<img id="submit_img" src="../../image/ic_exam_submit.png">
+	        	<span>交卷</span>
+	        </div>
+		</div>
+		<div class="fr" onclick="popup()">
+			<div id="count_msg">
+				<img src="../../image/ic_exam_true.png" style="margin-left: 0;">
+		        <span id="true_count" class="practice-true-count">0</span>
+		        <img src="../../image/ic_exam_false.png">
+		        <span id="false_count" class="practice-false-count">0</span>
+			</div>
+	        <img src="../../image/ic_count.png">
+	        <span id="count">0/0</span>
+		</div>
+	</footer>
+	<div id="card" style="display: none;">
+		<div class="card">
+			<div style="justify-content: center;height: 50px;display: flex;text-align: center;align-items: center;">
+				<div style="font-size: 0.85rem;color: #222;">答题卡</div>
+				<img src="../../image/ic_pop_close.svg" style="position: absolute;right: 0.8rem;" onclick='closeAllLayer()'>
+			</div>
+			<ul id="card_list">
+				<!-- <li class="aui-col-xs-2" onclick="jump(1)">
+					<div><span>4</span></div>
+				</li>
+				<li class="aui-col-xs-2 false-index" onclick="jump(1)">
+					<div><span>4</span></div>
+				</li>
+				<li class="aui-col-xs-2 true-index" onclick="jump(1)">
+					<div><span>4</span></div>
+				</li>
+				<li class="aui-col-xs-2 checked-index" onclick="jump(1)">
+					<div><span>4</span></div>
+				</li>
+				<li class="aui-col-xs-2 current-index" onclick="jump(1)">
+					<div><span>4</span></div>
+				</li> -->
+			</ul>
+		</div>
+	</div>
+
+	<div id='mode_div' style="display: none;">
+		<div style="justify-content: center;height: 50px;display: flex;text-align: center;align-items: center;">
+			<div style="font-size: 0.85rem;color: #222;">设置</div>
+			<img src="../../image/ic_pop_close.svg" style="position: absolute;right: 0.8rem;" onclick='closeAllLayer()'>
+		</div>
+		<ul class="aui-list aui-list-in">
+			<li class="aui-list-item setting">
+	            <div class="aui-list-item-inner">
+		            <div class="aui-list-item-title">夜间模式</div>
+		            <div class="aui-list-item-right">
+		                <input id="night" type="checkbox" class="aui-switch" onclick="nightMode()"> 
+		            </div>
+		        </div>
+	        </li>
+	        <li class="aui-list-item setting">
+	            <div class="aui-list-item-inner">
+		            <div class="aui-list-item-title">答对自动跳转到下一页</div>
+		            <div class="aui-list-item-right">
+		                <input id="jump" type="checkbox" class="aui-switch" onclick="jumpMode()">
+		            </div>
+		        </div>
+	        </li>
+	        <li class="aui-list-item setting">
+	            <div class="aui-list-item-inner">
+		            <div class="aui-list-item-title">题目答案顺序打乱</div>
+		            <div class="aui-list-item-right">
+		                <input id="random" type="checkbox" class="aui-switch" onclick="randomMode()">
+		            </div>
+		        </div>
+	        </li>
+        </ul>
+	</div>
+	<div class="draft-wrapper">
+		<div class="draft" id="draft" style="display: none">
+	        <div class="draft-header" id="draft-header">
+	        	<span class="aui-iconfont aui-icon-close" onclick="closeDraft()"></span>
+		        <ul id="draft-btns">
+		        	<span class="aui-iconfont aui-icon-back" id="draft-chexiao" style="color: #bbb"></span>
+		        	<span class="aui-iconfont aui-icon-trash" id="draft-delete"></span>
+		        	<span class="aui-iconfont aui-icon-forward" id="draft-huifu" style="color: #bbb"></span>
+		        </ul>
+	        </div>
+	        <div id="canvasMake"></div>
+	    </div>
+    </div>
+</body>
+<script id="questionTpl" type="text/html">
+<div class="swiper-slide">
+    <div class="question <%:=question.type == 1 ? '' : 'question_2'%>">
+        <p class="content"><img src="../../image/ic_question_type_<%:=question.type%><%:=nightImgName%>.png" class="question-type">
+            <%:=question.content%>
+        </p>
+        <%if(question.type == 1){%>
+	        <p class="option" onclick="checked(this, 'A')"><img src="../../image/ic_exam_a_normal<%:=nightImgName%>.png">
+	            <%:=question.optionA%>
+	        </p>
+	        <p class="option" onclick="checked(this, 'B')"><img src="../../image/ic_exam_b_normal<%:=nightImgName%>.png">
+	            <%:=question.optionB%>
+	        </p>
+	        <p class="option" onclick="checked(this, 'C')"><img src="../../image/ic_exam_c_normal<%:=nightImgName%>.png">
+	            <%:=question.optionC%>
+	        </p>
+	        <p class="option" onclick="checked(this, 'D')"><img src="../../image/ic_exam_d_normal<%:=nightImgName%>.png">
+	            <%:=question.optionD%>
+	        </p>
+        <%} else {%>
+         	<textarea type="text" placeholder="请输入您的答案&#13;&#10;PS：该题是开放性试题，请提交答案后自核核对解析"></textarea>
+	        <div class="aui-btn aui-btn-info submit" onclick="operateSubmit(this)">提交答案</div>
+		<%}%>	 	       
+        <div class="analysis <%:=question.type == 1 ? '' : 'analysis_2'%>" onclick="copyAnalysis()">
+        	<div class="r8 gray"></div>
+            <div class="analysis-header">
+                <div class="analysis-header-icon"></div>
+                <div>试题解析</div>
+                <div class="error" onclick="error(<%:=question.id%>)">纠错</div>
+            </div>
+            <p class="analysis_content">
+				<%:=question.analysis%>
+            </p>
+            <%if(question.type == 1){%>
+            <%if(isNotEmpty(question.category)){%>
+            <div class="knowledge">
+            	<div class="knowledge-title">知识点：</div>
+            	<div class="knowledge-item"><%:=question.category%></div>
+            </div>
+            <%}%>
+            <div class="statistics">
+            	我做过<span class="statistics-finish-count"><%:=question.finish%></span>次，做错<span class="statistics-wrong-count"><%:=question.wrong%></span>次。
+            </div>
+            <%}%>
+            <div class="r8 gray"></div>
+            <div class="analysis-header">
+                <div class="analysis-header-icon"></div>
+                <div>学习笔记</div>
+            </div>
+            <p class="rem_content"><%:=question.rem%></p>
+            <div class="rem" onclick="rem()">
+			    <div class="rem_desc"><%:=isNotEmpty(question.rem) ? '编辑笔记' : '暂无笔记，立即添加笔记'%></div>
+            </div>
+        </div>
+        <div class="h50"></div>
+    </div>
+</div>
+</script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/aui-tab.js"></script>
+<script type="text/javascript" src="../../script/swiper.min.js"></script>
+<script type="text/javascript" src="../../script/layer.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/practice.js"></script>
+<script type="text/javascript" src="../../script/practice-common.js"></script>
+<script type="text/javascript" src="../../script/aes.js"></script>
+<script type="text/javascript" src="../../script/data.js"></script>
+<script type="text/javascript" src="../../script/template.js"></script>
+<script type="text/javascript" src="../../script/draft.js"></script>
+<script type="text/javascript">
+	var talkingData;
+	var headerH;
+ 	var list;
+ 	var layerIndex;
+ 	var db;
+ 	var subject;
+ 	var nightChecked;
+ 	var nightImgName = "";
+ 	var jumpChecked;
+ 	var randomChecked;
+ 	var autoDeleteTimes;
+ 	var module;
+ 	var mode = 1; // 1:答题模式，2:学习模式
+	// 选项顺序打乱
+	var arrFinal = ['A', 'B', 'C', 'D'];
+	var arr = ['A', 'B', 'C', 'D'];
+   	var backSecond = 0;
+   	var noteSortType = 1 // 1:默认排序,2:时间排序,3:错误率排序
+
+	var mySwiper;
+
+    function goback(){
+        if (module == "exam") {
+    		api.confirm({
+                title: '温馨提示',
+                msg: '您确定要退出本次考试么?',
+                buttons: ['继续做题', '确定退出']
+            }, function(ret, err) {
+                if (ret.buttonIndex == 2) {
+                    api.closeWin({name:'practice'});
+			        api.sendEvent({name: 'homeUpdate'});
+			        api.sendEvent({name: 'note_update'});
+                } else if (ret.buttonIndex == 1) {
+                    return;
+                }
+            });
+		} else if (module == "condition") {
+    		api.confirm({
+                title: '温馨提示',
+                msg: '您确定要退出本次练习么?',
+                buttons: ['继续做题', '确定退出']
+            }, function(ret, err) {
+                if (ret.buttonIndex == 2) {
+                    api.closeWin({name:'practice'});
+			        api.sendEvent({name: 'homeUpdate'});
+			        api.sendEvent({name: 'note_update'});
+                } else if (ret.buttonIndex == 1) {
+                    return;
+                }
+            });
+		} else {
+			api.closeWin({name:'practice'});
+	        api.sendEvent({name: 'homeUpdate'});
+	        api.sendEvent({name: 'note_update'});
+		}
+		api.sendEvent({name:'listRefresh'})
+    }
+
+    function init(){
+		$api.html($api.byId('question_list'),"")
+		// 修正错题
+		correctQuestions()
+		// 答题卡
+		initCardView();
+		// 选项打乱处理
+		randomHandler();
+		// 错题集排序
+		noteHandler();
+
+		// 初始化swiper，跳转记录判断
+		var initialSlide = 1;
+		if (!isEmpty(api.pageParam.index)) {
+			initialSlide = eval(api.pageParam.index);
+		}
+		// 初始化题目内容
+		if (list.length < 10 || module == "exam_note") {
+			initListHtml(0, list.length);
+			mySwiper = new Swiper('.swiper-container', {
+				initialSlide :initialSlide - 1,
+				onSlideChangeEnd: function(swiper){
+					showPage();
+					document.body.scrollTop = 0
+			    }
+			})
+		} else {
+			// 懒加载
+			if (initialSlide > 10) {
+				initListHtml(0, initialSlide);
+				mySwiper = new Swiper('.swiper-container', {
+					initialSlide :initialSlide - 1,
+					onSlideChangeEnd: function(swiper){
+						showPage();
+						document.body.scrollTop = 0
+				    }
+				})
+				setTimeout(function(){
+					initListHtml(initialSlide, list.length);
+					mySwiper.update()
+				}, 200)
+			} else {
+				initListHtml(0, 10);
+				mySwiper = new Swiper('.swiper-container', {
+					initialSlide :initialSlide - 1,
+					onSlideChangeEnd: function(swiper){
+						showPage();
+						document.body.scrollTop = 0
+				    }
+				})
+				setTimeout(function(){
+					initListHtml(10, list.length);
+					mySwiper.update()
+				}, 200)
+			}
+		}
+		// 跳转后设置已做题
+		if (initialSlide > 1) {
+			for (var i = 0; i < initialSlide; i++) {
+				if (!isEmpty(list[i].temp_answer)) {
+					showFinishedAnswer(i, list[i].temp_answer, true)
+				}
+			}
+		}
+		// 第一次收藏初始化判断
+		if (list.length > 0) {
+			showPage();
+		} else {
+        	$api.text($api.byId('count'),'0/0');
+			toast('这里的题目空空哒(๑•ᴗ•๑)')
+		}
+		// 考试后查看错题
+		if (module == "exam_note") {
+			for (var i = 0; i < list.length; i++) {
+				if (!isEmpty(list[i].exam_answer)) {
+					// 已做题，用户回答的选项纳入统计
+					showFinishedAnswer(i, list[i].exam_answer, true)
+				} else {
+					// 未做题，都按回答错误处理
+					showFinishedAnswer(i, list[i].answer, false)
+				}
+			}
+		}
+    }
+
+    apiready = function(){
+        var header = $api.byId('whiteHeader');
+        fixWhiteStatusBar(header);
+        $api.fixStatusBar(document.getElementById('draft-header'));
+        headerH = $api.offset(header).h;
+        var footer = $api.byId('footer');
+        if (api.safeArea.bottom > 12) {
+        	$api.fixTabBar(footer);
+        }
+        talkingData = api.require('talkingData');
+
+        $api.append(document.head,'<style>.question{padding:{0}px 0 20px;}</style>'.format(eval(headerH + 20)));
+
+        subject = get('subject');
+        
+        var tab = new auiTab({
+	        element:document.getElementById("mode"),
+	        repeatClick:true
+	    },function(ret){
+	    	mode = ret.index;
+	        if(ret.index == 1){
+	        	for (var i = 0; i < list.length; i++) {
+            		if (list[i].finished != 1) {
+            			var parent =  mySwiper.slides[i];
+            			if (list[i].type == 1) {
+    				        $api.attr($api.first($api.domAll(parent, 'p.option')[list[i].answer.charCodeAt() - 65], 'img'), "src", "../../image/ic_exam_" + list[i].answer.toLowerCase() + "_normal" + nightImgName + ".png");
+            			}
+            			$api.removeCls(parent, 'show-answer');
+            		}
+            	}
+            } else if(ret.index == 2){
+ 				for (var i = 0; i < list.length; i++) {
+            		if (list[i].finished != 1) {
+            			var parent =  mySwiper.slides[i];
+            			if (list[i].type == 1) {
+    				        $api.attr($api.first($api.domAll(parent, 'p.option')[list[i].answer.charCodeAt() - 65], 'img'), "src", "../../image/ic_exam_answer_true" + nightImgName + ".png");
+            			}
+            			$api.addCls(parent, 'show-answer');
+            		}
+            	}
+            }
+            if (list.length != 0) {
+            	initCurrentHeight()
+            }
+	    });
+	    // 考试模式
+	    module = api.pageParam.module
+	    if (module == "exam") {
+	    	$api.css($api.byId('mode'),'display:none');
+        	$api.css($api.byId('exam_time'),'display:block');
+        	$api.css($api.byId('count_msg'),'display:none');
+        	$api.css($api.byId('exam_submit'),'display:inline-block');
+     
+        	totalTime = time;
+        	examCountdown()
+        	api.addEventListener({
+			    name:'pause'
+			}, function(ret, err){        
+			    clearTimeout(timer);
+			});
+			api.addEventListener({
+			    name:'resume'
+			}, function(ret, err){     
+				clearTimeout(timer);   
+			    timer = setTimeout('examCountdown()',1000);
+			});
+	    }
+        // 各种模式
+		nightChecked = get('night_mode')
+		if (isEmpty(nightChecked)) {
+			nightChecked = 0;
+			nightImgName = "";
+		} else if(nightChecked == 1){
+			nightImgName = "_n"
+			$api.addCls($api.dom('html'),'night')
+        	$api.addCls($api.dom('body'),'night')
+
+        	$api.attr($api.byId("submit_img"), "src", "../../image/ic_exam_submit_n.png")
+		}
+		jumpChecked = get('jump_mode', 1)
+		randomChecked = get('random_mode', 0)
+		autoDeleteTimes = getAutoDeleteTimes()
+        if (module == 'note') {
+        	$api.css($api.byId('note'),'display:inline-block');
+        	$api.css($api.byId('normal'),'display:none');
+        	noteSortType = get("noteSortType", 1)
+        }
+		db = api.require('db');
+		if (module != "exam_note") {
+			if (module == 'exam') {
+				var ret = db.selectSqlSync({
+				    name: 'rk',
+				    sql: 'SELECT * FROM question where type = 1 and subject = {0} and sort_id < 71 ORDER BY RANDOM() limit 70'.format(subject)
+				});
+				list = ret.data;
+				ret = db.selectSqlSync({
+				    name: 'rk',
+				    sql: 'SELECT * FROM question where type = 1 and subject = {0} and sort_id > 70 and section = {1} ORDER BY sort_id'.format(subject, list[0].section)
+				});
+				list = list.concat(ret.data)
+				init();
+			} else {
+				db.selectSql({
+				    name: 'rk',
+				    sql: 'SELECT * FROM question where ' + api.pageParam.condition
+				}, function(ret, err) {
+				    if (ret.status) {
+				        list = ret.data;
+				        init();
+				    } else {
+				        alert("网络异常,code:615\n请重启APP后再试");
+				    }
+				});
+			}
+		} else {
+			list = api.pageParam.data;
+			init()			
+		}
+		// 夜间模式提醒
+		nightTips();	
+
+		api.addEventListener({
+		    name: 'change_rem'
+		}, function(ret, err) {
+			list[ret.value.index].rem = ret.value.rem;
+			if (ret.value.index == mySwiper.realIndex) {
+		        $api.html(getCurrentElement("rem_content"), ret.value.rem)
+		        if (isEmpty(list[ret.value.index].rem)) {
+		        	$api.html(getCurrentElement("rem_desc"), "暂无笔记，立即添加笔记")
+		        } else {
+			        $api.html(getCurrentElement("rem_desc"), "编辑笔记")
+		        }
+		        initCurrentHeight()
+			}
+		});
+		api.addEventListener({
+		    name: 'keyback'
+		}, function(ret, err) {
+		    goback()
+		});
+    };
+</script>
+ <script>
+ 	var totalTime;
+	var time=9000;
+	var minute = 0;
+	var second = 0;
+	var timer;
+	function examCountdown(){
+	 	time--;
+		if (time > -1){	
+			minute = parseInt(time / 60);
+			second = time - minute * 60;
+
+			document.getElementById("time").innerHTML = minute + ":" + add0(second);
+
+			second = 1800 - time;
+	 		
+			timer = setTimeout('examCountdown()',1000);//调用自身实现
+		} else {
+			toastLong("时间已经到了哦，请赶紧交卷哦")
+	   		clearTimeout(timer);
+	 	}
+	}
+
+	function add0(m){return m<10?'0'+m:m }
+</script>
+</html>

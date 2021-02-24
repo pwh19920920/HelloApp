@@ -1,0 +1,220 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width"/>
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>选择题成绩单</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <style>
+        html,body{background:white}
+        .statistics{height:140px;width:140px;border:8px solid #e4f5fd;border-radius:50%;overflow:hidden;margin:1rem auto 1.2rem;position:relative;z-index: 999;}
+        .wave{position:relative;width:140px;height:140px;background-color:#339afe;border-radius:50%;}
+        .wave::before,.wave::after{content:"";position:absolute;width:280px;height:280px;top:3px;left:50%;background-color:white;border-radius:45%;transform:translate(-50%,-70%) rotate(0);animation:rotate 6s linear infinite;z-index:10;}
+        .wave::after{border-radius:47%;background-color:rgba(255,255,255,.9);transform:translate(-50%,-70%) rotate(0);animation:rotate 10s linear -5s infinite;z-index:20;}
+        @keyframes rotate{
+            50%{transform:translate(-50%,-73%) rotate(180deg);}
+            100%{transform:translate(-50%,-70%) rotate(360deg);}
+        }
+        .statistics .desc{font-size:0.6rem;color:#bbb;font-weight:300;position:absolute;top:25px;z-index:999;width:100%;text-align:center;}
+        .statistics .num{font-size:1.2rem;color:#339afe;font-weight:300;position:absolute;top:44px;z-index:999;width:100%;text-align:center;}
+        .statistics-detail{display:flex;justify-content:space-between;margin:0 2.2rem 1rem;}
+        .statistics-item{display:flex;justify-content:center;align-content:center;text-align:center;flex-direction:column;}
+        .statistics-item .desc{font-size:0.6rem;color:#bbb;font-weight:300;}
+        .statistics-item .num{font-size:1rem;color:#339afe;font-weight:300;padding-bottom:0.2rem;}
+        .aui-list .aui-list-header.record-header{background-color:white;border-bottom:1px solid #eee;padding:0.5rem 0.75rem;font-size:0.7rem;color:#555;justify-content:start;}
+        .score{color:#f05f61;font-size:15px;padding-left:5px;display:flex!important;justify-content:start!important;align-items:flex-end!important;}
+        .score-num{font-size:1.4rem;font-weight:bold;line-height:1.5rem;}
+        .last-time{font-size:13px;line-height:1.5rem;color:#888;}
+        .last-time img{width:0.8rem;margin-top:-0.1rem;vertical-align:middle;}
+        .begin-time{text-align:right;font-size:13px;line-height:1.5rem;color:#888;}
+        #list{padding-left:0.2rem;}
+        #noRecords{background-image:none!important;}
+        #noRecords .aui-media-list-item-inner{justify-content:space-between;padding:8px 14px 0 5px;}
+        #noRecords .aui-list-item-inner{width:auto}
+        .aui-list .aui-list-item-inner.submit{color:white;margin:0;height:1.6rem;line-height:1.6rem;min-height:1.6rem;padding:0 15px;background:#339afe!important;}
+        .no-records-desc{font-size:0.7rem;color:#777;line-height:1.5rem}
+    </style>
+
+</head>
+<body>
+    <div id="whiteHeader">
+    	<header class="aui-bar aui-bar-nav header-gray">
+    	    <a class="aui-pull-left aui-btn" onclick="goback()">
+    	        <span class="aui-iconfont aui-icon-left"></span>
+    	    </a>
+    	    <div class="aui-title">选择题成绩单</div>
+    	</header>
+    </div>
+    <div class="statistics">
+        <div class="wave"></div>
+        <div class="desc">累计考试次数</div>
+        <div class="num" id="totalCount">0</div>
+    </div>
+    <div class="statistics-detail">
+        <div class="statistics-item">
+            <div class="num" id="passCount">0</div>
+            <div class="desc">及格次数</div>
+        </div>
+        <div class="statistics-item">
+            <div class="num" id="historicHigh">0</div>
+            <div class="desc">历史最高</div>
+        </div>
+        <div class="statistics-item">
+            <div class="num" id="forecast" style="color: #f05f61;">0</div>
+            <div class="desc">成绩预测</div>
+        </div>
+    </div>
+    <div style="height: 10px;background: #f3f3f3"></div>
+    <div class="aui-content aui-margin-b-15">
+        <ul class="aui-list aui-media-list" id="content">
+            <li class="aui-list-header record-header">
+                <img src="../../image/ic_record_history.png" style="height: 0.9rem;margin-right: 0.3rem;">
+                <span style="padding-top: 2px;">历史成绩</span>
+            </li>
+            <div id="list">
+                <li class="aui-list-item aui-list-item-middle" id="noRecords">
+                    <div class="aui-media-list-item-inner">
+                        <div class="aui-list-item-inner no-records-desc">
+                            呀，你还没有考过试哦~~！
+                        </div>
+                        <div class="aui-list-item-inner submit" onclick="openHomeWin('exam')">
+                            我要考试
+                        </div>
+                    </div>
+                </li>
+               <!--  <li class="aui-list-item aui-list-item-middle" ontouchstart="gtouchstart(1)" ontouchend="gtouchend()" ontouchmove="gtouchmove()">
+                    <div class="aui-media-list-item-inner">
+                        <div class="aui-list-item-inner score">
+                            <span class="score-num">3</span>
+                            <span>&nbsp;分</span>
+                        </div>
+                        <div class="aui-list-item-inner last-time">
+                            <span>5分02秒</span>
+                        </div>
+                        <div class="aui-list-item-inner begin-time">
+                            10.31 20:28
+                        </div>
+                    </div>
+                </li>
+                <li class="aui-list-item aui-list-item-middle">
+                    <div class="aui-media-list-item-inner">
+                        <div class="aui-list-item-inner score">
+                            <span class="score-num">12</span>
+                            <span>&nbsp;分</span>
+                        </div>
+                        <div class="aui-list-item-inner last-time">
+                            <span>5分02秒</span>
+                        </div>
+                        <div class="aui-list-item-inner begin-time">
+                            10.31 20:28
+                        </div>
+                    </div>
+                </li> -->
+            </div>
+        </ul>
+    </div>
+</body>
+<script id="tpl" type="text/html">
+    <%for(var i = 0; i < list.length; i++) {%>
+    <li class="aui-list-item aui-list-item-middle" ontouchstart="gtouchstart(<%:=list[i].id%>)" ontouchend="gtouchend()" ontouchmove="gtouchmove()">
+        <div class="aui-media-list-item-inner">
+            <div class="aui-list-item-inner score">
+                <span class="score-num"><%:=list[i].score%></span>
+                <span>&nbsp;分</span>
+            </div>
+            <div class="aui-list-item-inner last-time">
+                <span><%:=list[i].lastTime%></span>
+            </div>
+            <div class="aui-list-item-inner begin-time">
+                <%:=list[i].createTime%>
+            </div>
+        </div>
+    </li>
+    <%}%>
+</script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/template.js"></script>
+<script type="text/javascript">
+    var talkingData;
+    var subject;
+
+    function goback() {
+        api.closeWin();
+    }
+
+    apiready = function() {
+        var header = $api.byId('whiteHeader');
+        fixWhiteStatusBar(header);
+
+        talkingData = api.require('talkingData');
+        subject = get("subject")
+
+        show();
+    };
+
+    function show(){
+        var connectionType = api.connectionType
+        if (connectionType == 'none') {
+            alert("网络开小差了，请检查网络连接是否正常~")
+        }
+
+        var records = get("noSubmitRecords")
+
+        http('/record/list', 'get', {"noSubmitRecords": records}, true, function(data){
+            remove('noSubmitRecords')
+            $api.html($api.byId('list'), "");
+            
+            var list = data.list
+            if (list.length > 0) {
+                var tpl = template(document.getElementById('tpl').innerHTML, {list: list});
+                $api.html($api.byId('list'), tpl);
+            }
+            $api.text($api.byId('totalCount'), data.totalCount)
+            $api.text($api.byId('passCount'), data.passCount)
+            $api.text($api.byId('historicHigh'), data.historicHigh)
+            $api.text($api.byId('forecast'), data.forecast)
+        });
+    }
+
+    function deleteRecord(id){
+        api.actionSheet({
+            cancelTitle: '取消',
+            destructiveTitle: '删除此次考试成绩',
+        }, function(ret, err) {
+            if (ret.buttonIndex == 1) {
+                http('/record/delete', 'post', {id: id}, true, function(data){
+                    toast("删除成功~")
+                    show()
+                });
+            }
+        });
+    }
+
+    var timeOutEvent=0;
+    function gtouchstart(id){
+        timeOutEvent = setTimeout(function(){
+            longPress(id)
+        },500);
+    };
+    function gtouchend(){
+        clearTimeout(timeOutEvent);
+        if(timeOutEvent!=0){
+            console.log('单击执行代码区');
+        }
+    };
+    function gtouchmove(){
+        clearTimeout(timeOutEvent);
+        timeOutEvent = 0;
+        console.log('单击未松开直接滑动的执行代码区，默认取消任何操作');
+    };
+    function longPress(id){
+        timeOutEvent = 0;
+        console.log('长按执行代码区');
+        deleteRecord(id)
+    }
+</script>
+</html>

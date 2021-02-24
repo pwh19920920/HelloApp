@@ -1,0 +1,80 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width"/>
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>编辑笔记</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <style>
+        textarea{height:10rem;background:white;line-height:1rem;resize:none;margin:0.5rem 0;overflow:hidden;padding:0.7rem 0.5rem;}
+    </style>
+
+</head>
+<body>
+    <div id="whiteHeader">
+        <header class="aui-bar aui-bar-nav header-gray">
+            <a class="aui-pull-left aui-btn aui-btn-info" onclick="goback()">
+                <span class="aui-iconfont aui-icon-left"></span>
+            </a>
+            <div class="aui-title">编辑笔记</div>
+        </header>
+    </div>
+    <textarea placeholder="请输入笔记内容" id="rem"></textarea>
+    <div class="aui-btn aui-btn-info submit" onclick="save()">保存</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    var db;
+
+    function goback() {
+        api.closeWin({
+            name: 'save_rem'
+        });
+    }
+
+    function save() {
+        var rem = $api.val($api.byId('rem'));
+        rem = rem.replace(/"/g, "&quot;")
+
+        db.executeSql({
+            name: 'rk',
+            sql: 'update question set rem = "{0}", book_time = {1} where id = {2}'.format(rem, new Date().getTime(), api.pageParam.id)
+        }, function(ret, err) {
+            if (ret.status) {
+                toast('保存成功，即将返回练习界面')
+
+                api.sendEvent({
+                    name: 'change_rem',
+                    extra: {
+                        index: api.pageParam.index,
+                        rem: rem
+                    }
+                });
+                setTimeout(function () {
+                    goback();
+                }, 1200);
+            } else {
+                alert(JSON.stringify(err));
+            }
+        });
+        api.sendEvent({
+            name: 'bookShow',
+        });
+    }
+
+    apiready = function() {
+        var header = $api.byId('whiteHeader');
+        fixWhiteStatusBar(header);
+       
+        db = api.require('db');
+
+        if (isNotEmpty(api.pageParam.rem)) {
+            $api.val($api.byId('rem'), api.pageParam.rem.replace(/&quot;/g, "\""))
+        }
+    };
+</script>
+</html>

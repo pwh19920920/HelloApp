@@ -1,0 +1,450 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width"/>
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>错题集</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+	<style>
+        html,body{background:white;}
+        .no-content{background:white;overflow:hidden;}
+        .circle_bg{border-radius:50%;height:0.45rem;width:0.45rem;margin:0.4rem 0.6rem 0 0.2rem;display:inline-block;vertical-align:top;}
+        .circle_bg span{display:block;color:#FFFFFF;height:18px;line-height:22px;text-align:center}
+        .count{float:right;padding-right:6px;color:#999;font-size:14px;}
+        .divider{height:15px;background:#f5f5f5;}
+        #no_content{text-align:center;color:#379ed3;font-size: 0.75rem;display: none}
+        #no_content img{margin:60% auto 0.1rem;width:5.5rem;}
+        #no_content .aui-btn.submit{width:46%;border-radius:0.45rem;font-size:0.8rem;margin-top:1.3rem;background:#339afe!important;height: 1.9rem;line-height: 1.9rem}
+
+        .page-container{min-height:100%;position:relative;}
+        .aui-content{padding-bottom:8rem;}
+        .delete-all{position:absolute;left:0;bottom:0;display:block;text-align:center;color:#999;line-height:2rem;font-size:0.7rem;width:100%;height:2rem}
+        .delete-all > div{width:5rem;margin:auto;}
+        .statistics{text-align:center;display:flex;height:4.9rem;align-items:center;}
+        .statistics-item{flex-grow:1;margin-top:-0.4rem;}
+        .statistics-count{font-size:1.2rem;color:#2a2a2a;}
+        .statistics-desc{color:#666;margin-top:0.2rem;font-size:0.7rem;display:flex;align-items:center;justify-content:center;}
+        .statistics-desc .aui-iconfont{font-size:0.5rem;margin-left:0.15rem;margin-top:0.1rem}
+        .list-title{font-weight:500;margin:0.7rem 0 0.2rem 0.8rem;font-size:1rem;}
+        .setting{float:right;display:none;align-items:center;font-size:0.7rem;color:#2d2d2d;height:30px;margin-right:0.7rem;}
+        .setting img{height:0.65rem;margin-right:0.3rem;}
+        #book_icon.setting img{height:0.85rem;margin-bottom:1px;margin-right:0.2rem}
+        .setting-layer p{font-size:0.7rem;margin:0.7rem 0.5rem;height:1.1rem;}
+        .setting-layer .aui-list{background-image:none;height:8.2rem;overflow:scroll;}
+        .book-setting-layer .aui-list{height:5rem;overflow:hidden;}
+        .setting-layer .aui-list-item-title{text-align:center;color:#666}
+        .setting-layer .aui-list.aui-list-in .aui-list-item{background-image:linear-gradient(0,#eeeeee,#eeeeee 50%,transparent 50%);background-image:-webkit-linear-gradient(90deg,#eeeeee,#eeeeee 50%,transparent 50%);}
+        .setting-layer ul > li:last-child{background-image:none!important}
+        .setting-layer i{display:none}
+        .setting-layer .list-show{background:#caeefd;}
+        .setting-layer .list-show i{display:inline-block;position:absolute;right:8%;color:#4ba3f0;font-weight:bold;}
+    </style>
+
+</head>
+<body>
+    <div id="whiteHeader" style="position: fixed;">
+        <header class="aui-bar aui-bar-nav header-gray header-gray-light">
+            <a class="aui-pull-left aui-btn" onclick="goback()">
+                <span class="aui-iconfont aui-icon-left"></span>
+            </a>
+            <div class="aui-title" id="title">软考通</div>
+        </header>
+    </div>
+    <div id="no_content">
+        <img src="../../image/ic_no_question.gif">
+        <div>这里还没有题哦~~</div>
+        <div class="aui-btn aui-btn-info submit" onclick="goback()">我要练习</div>
+    </div>
+    <div class="page-container">
+        <div class="aui-content" id="have_content">
+            <div class="statistics" id="statistics">
+                <div class="statistics-item" style="border-right: 1px solid #efefef;" onclick="startPractice(0)">
+                    <div class="statistics-count" id="latest_count">0</div>
+                    <div class="statistics-desc">
+                        <span id="latest_desc">最新错题</span>
+                        <i class="aui-iconfont aui-icon-right"></i>
+                    </div>    
+                </div>
+                <div class="statistics-item" onclick="startPractice(-1)">
+                    <div class="statistics-count" id="total_count">0</div>
+                    <div class="statistics-desc">
+                        <span id="all_desc">全部错题</span>
+                        <i class="aui-iconfont aui-icon-right"></i>
+                    </div>   
+                </div>
+            </div>
+            <div style="height: 0.5rem;background: #f4f5f7"></div>
+            <div class="list-title">
+                <span id="detail_title">错题详情</span>
+                <div id="setting_icon" class="setting" onclick="openSetting()">
+                    <img src="../../image/ic_note_setting.png">移除
+                </div>
+                <div id="book_icon" class="setting" onclick="openSetting()">
+                    <img src="../../image/ic_note_book.png">浏览模式
+                </div>
+            </div>
+            <ul id="list" class="aui-list aui-list-in" style="background-image:none">
+                <div id="content">
+                    <!-- <li class="aui-list-item">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-title">
+                                <span class="circle_bg blue">  
+                                    <span></span>
+                                </span> 
+                                数据结构与算法
+                                <span class="count">72</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="aui-list-item">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-title">
+                                <span class="circle_bg green">  
+                                    <span></span>
+                                </span> 
+                                程序设计基础
+                            </div>
+                        </div>
+                    </li>
+                    <li class="aui-list-item">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-title">
+                                <span class="circle_bg orange">  
+                                    <span></span>
+                                </span> 
+                                软件工程基础
+                            </div>
+                        </div>
+                    </li> -->
+                </div>
+            </ul>
+            <div class="r10"></div>
+        </div>
+        <div class="delete-all" id="delete_div">
+            <div id="delete_all" onclick="deleteAll()">清空错题</div>
+        </div>
+    </div>
+    <div id="setting" style="display: none;">
+        <div class="setting-layer">
+            <p>设置连续做对几次，自动移除</p>
+            <ul class="aui-list aui-list-in">
+                <li class="aui-list-item" onclick="chooseAutoDeleteTimes(0)"><div class="aui-list-item-inner"><div class="aui-list-item-title">不移除</div><i class="aui-iconfont aui-icon-correct"></i></div></li>
+                <li class="aui-list-item" onclick="chooseAutoDeleteTimes(1)"><div class="aui-list-item-inner"><div class="aui-list-item-title">1次</div><i class="aui-iconfont aui-icon-correct"></i></div></li>
+                <li class="aui-list-item" onclick="chooseAutoDeleteTimes(2)"><div class="aui-list-item-inner"><div class="aui-list-item-title">2次</div><i class="aui-iconfont aui-icon-correct"></i></div></li>
+                <li class="aui-list-item" onclick="chooseAutoDeleteTimes(3)"><div class="aui-list-item-inner"><div class="aui-list-item-title">3次</div><i class="aui-iconfont aui-icon-correct"></i></div></li>
+                <li class="aui-list-item" onclick="chooseAutoDeleteTimes(4)"><div class="aui-list-item-inner"><div class="aui-list-item-title">4次</div><i class="aui-iconfont aui-icon-correct"></i></div></li>
+                <li class="aui-list-item" onclick="chooseAutoDeleteTimes(5)"><div class="aui-list-item-inner"><div class="aui-list-item-title">5次</div><i class="aui-iconfont aui-icon-correct"></i></div></li>
+                <li class="aui-list-item" onclick="chooseAutoDeleteTimes(6)"><div class="aui-list-item-inner"><div class="aui-list-item-title">6次</div><i class="aui-iconfont aui-icon-correct"></i></div></li>
+                <li class="aui-list-item" onclick="chooseAutoDeleteTimes(7)"><div class="aui-list-item-inner"><div class="aui-list-item-title">7次</div><i class="aui-iconfont aui-icon-correct"></i></div></li>
+                <li class="aui-list-item" onclick="chooseAutoDeleteTimes(8)"><div class="aui-list-item-inner"><div class="aui-list-item-title">8次</div><i class="aui-iconfont aui-icon-correct"></i></div></li>
+                <li class="aui-list-item" onclick="chooseAutoDeleteTimes(9)"><div class="aui-list-item-inner"><div class="aui-list-item-title">9次</div><i class="aui-iconfont aui-icon-correct"></i></div></li>
+                <li class="aui-list-item" onclick="chooseAutoDeleteTimes(10)"><div class="aui-list-item-inner"><div class="aui-list-item-title">10次</div><i class="aui-iconfont aui-icon-correct"></i></div></li>
+            </ul>
+        </div>
+    </div>
+    <div id="book_setting" style="display: none;">
+        <div class="setting-layer book-setting-layer">
+            <p>设置笔记的浏览模式后，选择章节查阅笔记即可生效</p>
+            <ul class="aui-list aui-list-in">
+                <li class="aui-list-item" onclick="chooseBookMode(0)"><div class="aui-list-item-inner"><div class="aui-list-item-title">普通模式</div><i class="aui-iconfont aui-icon-correct"></i></div></li>
+                <li class="aui-list-item" onclick="chooseBookMode(1)"><div class="aui-list-item-inner"><div class="aui-list-item-title">速览模式</div><i class="aui-iconfont aui-icon-correct"></i></div></li>
+            </ul>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/data.js"></script>
+<script type="text/javascript" src="../../script/layer.js"></script>
+<script type="text/javascript">
+    var module;
+    var subject;
+    var title;
+    var name;
+    var db;
+    var talkingData;
+    var layerIndex;
+    var latestTime;
+
+    function goback(){
+        api.closeWin("note")
+        api.sendEvent({name: 'homeUpdate'});
+    }
+
+    function deleteAll(){
+        talkingData.onEvent({
+            eventId: 'note_page',
+            parameters: {
+                button: "deleteAll",
+                module: module
+            }
+        });
+        api.confirm({
+            title: '温馨提示',
+            msg: '你确定要清空所有的' + name + '吗?',
+            buttons: ['确定', '取消']
+        }, function(ret, err) {
+            if (ret.buttonIndex == 1) {
+                api.confirm({
+                    title: '系统提示',
+                    msg: '注意！该操作不可逆！\n你确定要清空所有的' + name + '吗?',
+                    buttons: ['确定清空', '我再想想']
+                }, function(ret, err) {
+                    if (ret.buttonIndex == 1) {
+                        var condition = module + " = 0";
+                        if (module == 'book') {
+                            condition = "rem = null"
+                        }
+                        db.executeSql({
+                            name: 'rk',
+                            sql: 'update question set ' + condition + ' where subject = ' + subject
+                        }, function(ret, err) {
+                            if (ret.status) {
+                                api.toast({
+                                    msg: '清空成功',
+                                    duration: 2000,
+                                    location: 'bottom'
+                                });
+
+                                show()
+                            } else {
+                                alert(JSON.stringify(err));
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
+
+    function startPractice(section) {
+        var condition = module == 'book' ? '(rem is not null and rem != "" and rem != "<null>")' : module + " > 0 ";
+        if (section > 0) {
+            condition += ' and section = "' + section + '"';
+        } else if (section == 0) {
+            condition += ' and {0}_time > {1}'.format(module, latestTime);
+            talkingData.onEvent({
+                eventId: 'note_page',
+                parameters: {
+                    button: "latestNote",
+                    module: module
+                }
+            });
+        } else {
+            talkingData.onEvent({
+                eventId: 'note_page',
+                parameters: {
+                    button: "allNote",
+                    module: module
+                }
+            });
+        }
+        condition += " and subject = " + subject
+        if (module == 'book' && getBookMode() == 1) {
+            api.openWin({
+                name: 'book',
+                url: './book.html',
+                pageParam: {
+                    condition: condition + ' order by book_time desc',
+                    module: module
+                },
+                allowEdit: true
+            });
+        } else {
+            api.openWin({
+                name: 'practice',
+                url: './practice.html',
+                pageParam: {
+                    condition: condition,
+                    module: module,
+                    title: title
+                },
+                allowEdit: true
+            });
+        }
+    }
+
+    apiready = function() {
+        var header = $api.byId('whiteHeader');
+        fixWhiteStatusBar(header);
+        var headerH = $api.offset(header).h;
+        $api.css($api.byId('statistics'),'margin-top:' + eval(headerH + 10)  + "px");
+        $api.css($api.byId('delete_div'),'bottom:{0}px'.format(api.safeArea.bottom));
+        
+        talkingData = api.require('talkingData');
+
+        module = api.pageParam.module;
+        subject = get('subject')
+        latestTime = new Date().getTime() - 1000 * 60 * 60 * 24;
+   
+        if (module == 'note') {
+            title = "错题集" 
+            name = "错题";
+            $api.css($api.byId('setting_icon'),'display:flex');
+        } else if (module == 'collect'){
+            title = "收藏夹"
+            name = "收藏";
+        } else if (module == 'book'){
+            title = "笔记本"
+            name = "笔记";
+            $api.css($api.byId('book_icon'),'display:flex');
+        }
+        $api.text($api.byId('title'), title)
+        $api.text($api.byId('delete_all'), "清空所有" + name)
+        $api.text($api.byId('latest_desc'), '最新' + name)
+        $api.text($api.byId('all_desc'), '全部' + name)
+        $api.text($api.byId('detail_title'), name + '详情')
+
+        show()
+
+        api.addEventListener({
+            name: 'note_update'
+        }, function(ret, err) {
+            show();
+        });
+        api.addEventListener({
+            name: 'keyback'
+        }, function(ret, err) {
+            goback()
+        });
+    };
+
+    function show(){
+        $api.html($api.byId('content'), "")
+
+        var condition = module == 'book' ? '(rem is not null and rem != "" and rem != "<null>")' : module + " > 0 ";
+        condition += ' and subject = ' + subject;
+        db = api.require('db');
+        db.selectSql({
+            name: 'rk',
+            sql: 'SELECT count(*) as count FROM question where ' + condition
+        }, function(ret, err) {
+            if (ret.status) {
+                var data = ret.data;
+
+                if (data[0].count == 0) {
+                    $api.css($api.byId('have_content'),'display: none');
+                    $api.css($api.byId('no_content'),'display: block');
+                    $api.addCls($api.dom('html'), 'no-content');
+                    $api.addCls($api.dom('body'), 'no-content');
+                    return;
+                } else {
+                    $api.css($api.byId('have_content'),'display: block');
+                    $api.css($api.byId('no_content'),'display: none');
+                    $api.removeCls($api.dom('html'), 'no-content');
+                    $api.removeCls($api.dom('body'), 'no-content');
+                }
+                $api.text($api.byId('total_count'), data[0].count);
+                if (module == 'note') {
+                    $api.css($api.byId('mode_delete'),'display: block');
+                }
+                db.selectSql({
+                    name: 'rk',
+                    sql: 'SELECT section, type, count(*) as count FROM question where ' + condition + ' group by section, type order by section'
+                }, function(ret, err) {
+                    if (ret.status) {
+                        var data = ret.data;
+                        var start = 0;
+                        for (var i = 0; i < data.length; i++) {
+                            if (data[i].section.substr(1,1) == '1') {
+                                start = i;
+                                break;
+                            }
+                        }
+                        for (var i = start; i < data.length; i++) {
+                            $api.append($api.byId('content'),getHtml(data[i].section, getSectionName(data[i].section, subject, data[i].type), data[i].count));
+                        }
+                         for (var i = 0; i < start; i++) {
+                            $api.append($api.byId('content'),getHtml(data[i].section, getSectionName(data[i].section, subject, data[i].type), data[i].count));
+                        }
+                    } else {
+                        alert("网络异常,code:256\n请重启APP后再试");
+                    }
+                });
+                db.selectSql({
+                    name: 'rk',
+                    sql: 'SELECT count(*) as count FROM question where {0} and {1}_time > {2}'.format(condition, module, latestTime)
+                }, function(ret, err) {
+                    if (ret.status) {
+                        var data = ret.data;
+                        $api.text($api.byId('latest_count'), data[0].count);
+                    } else {
+                        alert("网络异常,code:310\n请重启APP后再试");
+                    }
+                });
+            } else {
+                alert("网络异常,code:260\n请重启APP后再试");
+            }
+        });
+    }
+
+    function openSetting(){
+        talkingData.onEvent({
+            eventId: 'note_page',
+            parameters: {
+                button: "setting",
+                module: module
+            }
+        });
+        if (module == 'note') {
+            layerIndex = layer.open({
+                type: 1,
+                content: $api.html($api.byId('setting')),
+                anim: 'up',
+                style: 'position:fixed; bottom:0; left:0; width: 100%; height: 10rem; border:none;background:#fff',
+                success: function(){
+                    var liList = $api.domAll($api.dom('.layui-m-layercont'),'li');
+                    $api.addCls(liList[getAutoDeleteTimes()], "list-show")
+                },  
+            });
+        } else if (module == 'book') {
+            layerIndex = layer.open({
+                type: 1,
+                content: $api.html($api.byId('book_setting')),
+                anim: 'up',
+                style: 'position:fixed; bottom:0; left:0; width: 100%; height: 7.5rem; border:none;background:#fff',
+                success: function(){
+                    var liList = $api.domAll($api.dom('.layui-m-layercont'),'li');
+                    $api.addCls(liList[getBookMode()], "list-show")
+                },  
+            });
+        }
+    }
+
+    function chooseAutoDeleteTimes(times){
+        layer.close(layerIndex)
+        save("autoDeleteTimes", times);
+        talkingData.onEvent({
+            eventId: 'autoDeleteTimes',
+            parameters: {
+                value: times
+            }
+        });
+    }
+
+    function getBookMode(){
+        return get("bookMode", 0);
+    }
+
+    function chooseBookMode(val){
+        layer.close(layerIndex)
+        save("bookMode", val);
+        talkingData.onEvent({
+            eventId: 'bookMode',
+            parameters: {
+                value: val
+            }
+        });
+    }
+
+    function getHtml(section, title, count){
+        var color = randomColor();
+        return '<li class=\"aui-list-item aui-list-item-middle\" tapmode=\"presshover\" onclick=\"startPractice(\'' +
+                    section + '\')\"><div class=\"aui-list-item-inner\">' +
+                    '<div class=\"aui-list-item-title\"><span class="circle_bg ' + color + '"><span></span></span> ' + title + '<span class="count">' + count + '</span></div></li>';
+    }
+</script>
+</html>

@@ -1,0 +1,560 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width"/>
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>首页</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <style>
+        html,body{background: white}
+        #homeHeader{background: #339afe;}
+        .home-header{text-align:center; height:50px;line-height:50px;background-size: 100% 100%;}
+        .home-header div,span{display:inline-block;width:inherit;color: #fff}
+        .home-header .aui-iconfont{font-size: 1rem}
+        .home-header .aui-iconfont.aui-icon-down{font-size: 0.7rem;margin-left: 6px}
+        .home-header .home-search{position: absolute;right: 0;}
+        .feedback{padding-left: 25px}
+        .search{margin: 0 20px 0 18px;}
+        .header{height: 220px;width: 100%;background: url(../../image/home_bg.png) no-repeat;margin-top: -1px;background-size: 100%}
+        .header-wrap{width: 100%;height: 80%;display: flex;}
+        .sum,.right{width: 30%;display: flex;flex-direction: column;justify-content: center;align-items: center;}
+        .sum p,.right p{color:#fff;font-size: 15px;}
+        .percent{width:40%;display: flex;justify-content: center;align-items: center;}
+        .circle{display: flex;flex-direction: column;justify-content: center;align-items: center;border-radius: 50%;}
+        .circle-back{width: 25vw;height: 25vw;background-color: rgba(255,255,255,0.2);}
+        .circle-two{width: 88%;height: 88%;background-color: rgba(255,255,255,0.2);}
+        .circle-three{width: 92%;height: 92%;background-color: rgba(255,255,255,0.2);}
+        .circle-content{width: 92%;height: 92%;background-color: rgba(255,255,255,0.7);}
+        .percent p{color:#339afe;font-size: 22px;}
+        .sum p:nth-child(2),
+        .right p:nth-child(2),
+        .percent p:nth-child(2){font-size: 12px;}
+        .content-list{padding: 10px;}
+        .title{display:flex;align-items:center;padding-left:10px;padding-top:12px;margin-bottom:1px;}
+        .title img{width: 5%;height: 5%;}
+        .title p{margin-left: 10px;font-size: 16px;font-weight: bold;color: #212121;}
+        .exam-list{margin-top: 18px;}
+        .parent-title{margin-left: 25px;}
+        .parent-top,.parent-bottom{position: relative;display: flex;align-items: center;}
+        .line{position: absolute;width: 1px;height: 70px;background-color: #f1ecec;left: 2%;top: 40%;}
+        .parent-top img.close,.parent-top img.open,.parent-top img.third{width: 3.5%;height: 6%;z-index: 2;}
+        .parent-top img.third{padding: 1px;}
+        .parent-top .icon-hidden{display: none;}
+        .parent-top img:last-child{width: 18px;position: absolute;right: 5%;}
+        .parent-top p{margin-left: 12px;font-size: 15px;color: #888;width: 100%}
+        .parent-bottom{margin-top: 13px;}
+        .parent-bottom p{margin-left: 5%;font-size: 11px;color: #bbb}
+        .load-container{width: 60%;height: 11px;margin-left: 24px;border: 1px solid rgba(51,154,254,0.2);border-radius: 20px;}
+        .load-container .loading{border-radius: 20px;height: 100%;background-color: #339afe;}
+        .child-list{padding-left:25px;padding-bottom:22px;border:none;background-size:100% 1px;background-repeat:no-repeat;background-position:bottom;background-image:linear-gradient(0,#dddddd,#dddddd 50%,transparent 50%);background-image:-webkit-linear-gradient(90deg,#dddddd,#dddddd 50%,transparent 50%);display:none;}
+        .child-list li{margin-top: 25px;}
+    </style>
+    <style>
+        .aui-grid-nine{overflow:auto;background:#ffffff;position:relative;}
+        .aui-grid-nine:after{border:none}
+        .aui-grid-nine li{float:left;position:relative;padding:5px 7px;display: flex;flex-direction: column;justify-content: center;align-items: center;}
+        .aui-grid-nine li:after{border:none}
+        .aui-grid-nine li img{width: 35%;margin: 8px;}
+        .aui-grid-nine p{font-size:14px;color:#777;}
+        .aui-list-view-cell{font-size:12px;padding:8px 15px;}
+        .aui-mask.aui-mask-in{opacity: 0;}
+        @media only screen and (max-height: 620px) {
+            .header{height: 180px;}
+            .aui-grid-nine li{padding:5px 7px;}
+            .aui-grid-nine p{margin-top: 1px;font-size: 13px}
+            .h20 {height: 12px}
+            .sum p,.right p{font-size: 0.7rem;}
+            .percent p{font-size: 1rem}
+            .sum p:nth-child(2),
+            .right p:nth-child(2),
+            .percent p:nth-child(2){font-size: 0.6rem;}
+            .parent-top img:last-child{margin-left: 35%;}
+        }
+        @media only screen and (min-height: 610px) {
+            .aui-grid-nine li{padding:5px 10px;}
+            .aui-grid-nine p{font-size:15px;}
+        }
+        /*隐私协议*/
+        .privacy div{text-align:center;}
+        .privacy span{color:#4273E2;display: inline}
+        .privacy-title{line-height:2.5rem;font-size:16px;margin-top:6px;}
+        .privacy-content{padding:0 20px;margin-bottom:20px;text-align:left !important;}
+        .privacy-btns{display:flex;justify-content:space-around;background-position: top;}
+        .privacy-btns div{line-height:2.2rem;font-size:15px;width: 100%}
+        .privacy-btn-left{color:#bbb;background-position: right;}
+        .privacy-btn-right{color:#4273E2;}
+    </style>
+
+</head>
+<body>
+<div id="homeHeader">
+   <div class="home-header">
+        <div id="subject" onclick="openHomeWin('subject')">
+            信息系统项目管理师
+        </div>
+        <span id="down" class="aui-iconfont aui-icon-down" onclick="openHomeWin('subject')"></span>
+        <a class="aui-pull-right home-search">
+            <span class="aui-iconfont aui-icon-search search" tapmode="icon-presshover" onclick="openHomeWin('search')"></span>
+        </a>
+    </div>
+</div>
+<div class="header">
+    <div class="header-wrap">
+        <div id="sum" class="sum">
+            <p id="finish">0道</p>
+            <p>做题数</p>
+        </div>
+        <div id="percent_div" class="percent">
+            <div class="circle-back circle">
+                <div class="circle-two circle">
+                    <div class="circle-three circle">
+                        <div class="circle-content circle">
+                            <p id="rate">0%</p>
+                            <p>刷题率</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="right" class="right">
+            <p id="true">0道</p>
+            <p>正确题数</p>
+        </div>
+    </div>
+</div>
+<div class="content-button">
+    <ul class="aui-grid-nine">
+        <li class="aui-col-xs-4 aui-text-center" tapmode="presshover" onclick="openHomeWin('condition')">
+            <img src="../../image/ic_function_condition.png" alt="智能练习">
+            <p>智能练习</p>
+        </li>
+        <li class="aui-col-xs-4 aui-text-center" tapmode="presshover" onclick="openHomeWin('exam')">
+            <img src="../../image/ic_function_exam.png" alt="模拟测验">
+            <p>模拟测验</p>
+        </li>
+        <li class="aui-col-xs-4 aui-text-center" tapmode="presshover" onclick="openHomeWin('record')">
+            <img src="../../image/ic_function_record.png" alt="考试记录">
+            <p>考试记录</p>
+        </li>
+        <li class="aui-col-xs-4 aui-text-center" tapmode="presshover" onclick="note('note')">
+            <img src="../../image/ic_function_note.png" alt="错题集">
+            <p>错题集</p>
+        </li>
+        <li class="aui-col-xs-4 aui-text-center" tapmode="presshover" onclick="note('collect')">
+            <img src="../../image/ic_function_collect.png" alt="收藏夹">
+            <p>收藏夹</p>
+        </li>
+        <li class="aui-col-xs-4 aui-text-center" tapmode="presshover" onclick="note('book')">
+            <img src="../../image/ic_function_book.png" alt="笔记本">
+            <p>笔记本</p>
+        </li>
+    </ul>
+</div>
+<div class="content-list" id="content-list">
+    <div class="title"> <img src="../../image/ic_home_title.png" alt="title">
+        <p>知识点</p>
+    </div>
+    <div class="exam-list">
+        <div class="parent-title">
+            <div class="parent-top"> <img src="../../image/ic_home_close.png" alt="close" class="close" onclick="expand(0, false)"> <img src="../../image/ic_home_open.png" alt="open" class="open icon-hidden" onclick="expand(0, true)">
+                <div class="line icon-hidden"></div>
+                <p>信息系统基础</p> <img src="../../image/ic_home_edit.png" alt="编辑"> </div>
+            <div class="parent-bottom">
+                <div class="load-container">
+                    <div class="loading"> </div>
+                </div>
+                <p>70/250</p>
+            </div>
+        </div>
+        <ul class="child-list">
+            <li>
+                <div class="parent-top"> <img src="../../image/ic_home_circle.png" alt="third" class="third">
+                    <div class="line"></div>
+                    <p>关系代数</p> <img src="../../image/ic_home_edit.png" alt="编辑"> </div>
+                <div class="parent-bottom">
+                    <div class="load-container">
+                        <div class="loading" style="width: 200;"></div>
+                    </div>
+                    <p>200/251</p>
+                </div>
+            </li>
+            <li>
+                <div class="parent-top"> <img src="../../image/ic_home_circle.png" alt="third" class="third">
+                    <p>软件工程</p> <img src="../../image/ic_home_edit.png" alt="编辑"> </div>
+                <div class="parent-bottom">
+                    <div class="load-container">
+                        <div class="loading" style="width: 70;"></div>
+                    </div>
+                    <p>70/252</p>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="exam-list">
+        <div class="parent-title">
+            <div class="parent-top"> <img src="../../image/ic_home_close.png" alt="close" class="close" onclick="expand(1, false)"> <img src="../../image/ic_home_open.png" alt="open" class="open icon-hidden" onclick="expand(1, true)">
+                <div class="line icon-hidden"></div>
+                <p>计算机网络基础知识</p> <img src="../../image/ic_home_edit.png" alt="编辑"> </div>
+            <div class="parent-bottom">
+                <div class="load-container">
+                    <div class="loading"> </div>
+                </div>
+                <p>40/250</p>
+            </div>
+        </div>
+        <ul class="child-list">
+            <li>
+                <div class="parent-top"> <img src="../../image/ic_home_circle.png" alt="third" class="third">
+                    <div class="line"></div>
+                    <p>计算机网络基础知识1</p> <img src="../../image/ic_home_edit.png" alt="编辑"> </div>
+                <div class="parent-bottom">
+                    <div class="load-container">
+                        <div class="loading" style="width: 10;"></div>
+                    </div>
+                    <p>10/251</p>
+                </div>
+            </li>
+            <li>
+                <div class="parent-top"> <img src="../../image/ic_home_circle.png" alt="third" class="third">
+                    <p>计算机网络基础知识2</p> <img src="../../image/ic_home_edit.png" alt="编辑"> </div>
+                <div class="parent-bottom">
+                    <div class="load-container">
+                        <div class="loading" style="width: 250;"></div>
+                    </div>
+                    <p>250/252</p>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+</body>
+<div id="privacy" style="display: none">
+    <div class="privacy">
+        <div class="privacy-title">温馨提示</div>
+        <div class="privacy-content">亲爱的用户，我们深知个人信息对您的重要性，并会尽全力保护您的个人信息安全。请您使用前重复阅读并认可我们的<span onclick="openSettingWin('agreement')">《用户协议》</span>和<span onclick="openSettingWin('privacy')">《隐私政策》</span></div>
+        <div class="privacy-btns thin-border">
+            <div class="privacy-btn-left thin-column-border" onclick="privacyChoose(1)">不同意</div>
+            <div class="privacy-btn-right" onclick="privacyChoose(2)">同意并继续</div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/template.js"></script>
+<script type="text/javascript" src="../../script/layer.js"></script>
+<script type="text/javascript" src="../../script/data.js"></script>
+<script type="text/javascript" src="../../script/home.js"></script>
+<script id="conListTpl" type="text/html">
+    <div class="title">
+        <img src="../../image/ic_home_title.png">
+        <p>知识点</p>
+    </div>
+    <%for(var i = 0; i < list.length; i++) {%>
+        <div class="exam-list">
+            <div class="parent-title">
+                <div class="parent-top">
+                    <%if(list.length > 1) {%>
+                        <%if(isExpand) {%>
+                            <img src="../../image/ic_home_close.png" alt="close" class="close icon-hidden" onclick="expand(<%:=i%>, false)">
+                            <img src="../../image/ic_home_open.png" alt="open" class="open" onclick="expand(<%:=i%>, true)">
+                            <div class="line"></div>
+                        <%} else {%>
+                            <img src="../../image/ic_home_close.png" alt="close" class="close" onclick="expand(<%:=i%>, false)">
+                            <img src="../../image/ic_home_open.png" alt="open" class="open icon-hidden" onclick="expand(<%:=i%>, true)">
+                            <div class="line icon-hidden"></div>
+                        <%}%>
+                    <%}%>
+                    <p onclick="openTotalPractice('<%:=i%>')"><%:=list[i].title%></p>
+                    <img src="../../image/ic_home_edit.png" alt="编辑" onclick="openTotalPractice('<%:=i%>')">
+                </div>
+                <div class="parent-bottom" onclick="openTotalPractice('<%:=i%>')">
+                    <div class="load-container">
+                    <div class="loading">
+                    </div>
+                </div>
+                <p><%:=list[i].progress%></p>
+            </div>
+        </div>
+        <%if(isNotEmpty(list[i].list)) {%>
+            <ul class="child-list">
+            <%for(var j = 0; j < list[i].list.length; j++) {%>
+                <li onclick="openPracticeWin('<%:=list[i].list[j].title%>')">
+                    <div class="parent-top">
+                        <img src="../../image/ic_home_circle.png" alt="third" class="third">
+                        <%if(j != list[i].list.length - 1){%>
+                            <div class="line"></div>
+                        <%}%>
+                        <p><%:=list[i].list[j].title%></p>
+                        <img src="../../image/ic_home_edit.png" alt="编辑">
+                    </div>
+                    <div class="parent-bottom">
+                        <div class="load-container">
+                            <div class="loading" style="width: <%:=parseFloat(list[i].list[j].progress)%>;"></div>
+                        </div>
+                        <p><%:=list[i].list[j].progress%></p>
+                    </div>
+                </li>
+            <%}%>
+            </ul>
+        <%}%>
+    </div>
+  <%}%>
+</script>
+<script type="text/javascript">
+    var db;
+    var subject;
+    var list;
+    var isOpenDatabase = false;
+    var talkingData;
+    var isExpand = true;
+    var expandArray = [];
+
+    function initView(){
+        changeSubject();
+    }
+
+    function initEvent(){
+        api.addEventListener({
+            name: 'homeUpdate'
+        }, function(ret, err) {
+            showIndex();
+        });
+        api.addEventListener({
+            name: 'changeSubject'
+        }, function(ret, err) {
+            subject = ret.value.subject;
+            changeSubject()
+            showIndex();
+        });
+        api.addEventListener({
+            name: 'auditShow'
+        }, function(ret, err) {
+        });
+    }
+
+    apiready = function() {
+        $api.fixStatusBar($api.byId('homeHeader'));
+        db = api.require('db');
+        // 初始化数据
+        initData();
+        // 初始化视图
+        initView();
+        // 监听事件
+        initEvent();
+        // 隐私政策
+        privacy();
+        // 5%机率出现好评
+        if (Math.floor(Math.random() * 100 + 1 < 6) && getCount() > 50) {
+            begHaoping();
+        }
+    };
+
+    function note(module){
+        var condition = module == 'book' ? '(rem is not null and rem != "" and rem != "<null>")' : module + " > 0 ";
+        db.selectSql({
+            name: 'rk',
+            sql: 'SELECT count(*) as count FROM question where subject = {0} and {1}'.format(subject, condition)
+        }, function(ret, err) {
+            if (ret.status) {
+                var data = ret.data;
+                if (data[0].count == 0) {
+                    toast("这里还没有题哦，赶紧去练习吧")
+                } else {
+                    openHomeWin(module)
+                }
+            }
+        })
+    } 
+
+    function openTotalPractice(index){
+        if (isEmpty(list[index].list)) {
+            var title = list[index].title;
+            if (title == '全部' || title == '其他') {
+                title = null;
+            }
+            openPracticeWin(title)
+        } else {
+            var category = [];
+            var childList = list[index].list;
+            for (var i = 0; i < childList.length; i++) {
+                category.push(childList[i].title)
+            }
+            openPracticeWin(category)
+        }
+    }
+
+    function openPracticeWin(category){
+        var conditionTemp = Array.isArray(category) ? 
+        "category in ('{0}') and subject = {1} and type = 1 order by type, sort_id".format(category.join("','"), subject)
+        : "category {0} and subject = {1} and type = 1 order by type, sort_id".format(category == null ? 'is null' : "= '{0}'".format(category), subject)
+        var section = subject + (category == null ? 'null' : category.toString().substr(0,10))
+
+        var progress = getProgress(section, 1)
+        if (isEmpty(progress)) {
+            api.openWin({
+                name: 'practice',
+                url: './practice.html',
+                pageParam: {
+                    condition: conditionTemp,
+                    section: section,
+                    type: 1
+                },
+                allowEdit: true
+            });
+        } else {
+            api.confirm({
+                title: '温馨提示',
+                msg: '您上次做到第{0}题，想要继续练习吗？'.format(progress),
+                buttons: ['继续开始', '重新开始']
+            }, function(ret, err) {
+                console.log(ret.buttonIndex + " ," + progress)
+                if(1 == ret.buttonIndex){
+                    api.openWin({
+                        name: 'practice',
+                        url: './practice.html',
+                        pageParam: {
+                            condition: conditionTemp,
+                            section: section,
+                            type: 1,
+                            index: progress
+                        },
+                        allowEdit: true
+                    });
+                } else if (2 == ret.buttonIndex) {
+                    saveProgress(section, 1, "")
+                    api.openWin({
+                        name: 'practice',
+                        url: './practice.html',
+                        pageParam: {
+                            condition: conditionTemp,
+                            section: section,
+                            type: 1
+                        },
+                        allowEdit: true
+                    });
+                }
+            });
+        }
+    }
+
+    function getFinishCount(finishList, category){
+        for (var i = 0; i < finishList.length; i++) {
+            if (finishList[i].category == category) {
+                return finishList[i].count;
+            }
+        }
+        return 0;
+    }
+
+    function sumProgress(childList){
+        var finishCount = 0;
+        var count = 0;
+        for (var i = 0; i < childList.length; i++) {
+            finishCount += eval(childList[i].progress.split("/")[0])
+            count += eval(childList[i].progress.split("/")[1])
+        }
+        return finishCount + "/" + count
+    }
+
+
+    function expand(index, isClose){
+        var el = $api.domAll("." + (isClose ? "open" : "close"))[index]
+        var parentDom = $api.closest(el, '.parent-top');
+        var parentTitleDom = $api.closest(el, '.parent-title');
+        if(isClose){
+             // open -> close
+            var closeDom = $api.dom(parentDom,'img.close');
+            $api.addCls(el, 'icon-hidden');
+            $api.removeCls(closeDom, 'icon-hidden');
+            var lineDom = $api.dom(parentDom,'.line');
+            $api.addCls(lineDom, 'icon-hidden');
+            var parentTitleDom = $api.next(parentTitleDom)
+            if (parentTitleDom == null) {
+                return;
+            }
+            parentTitleDom.style.display = 'none';
+        }else{
+            // close -> open
+            var openDom = $api.dom(parentDom,'img.open');
+            $api.addCls(el, 'icon-hidden');
+            $api.removeCls(openDom, 'icon-hidden');
+            // line显示
+            var lineLeft = parseFloat(window.getComputedStyle(openDom).width)/2 - 0.5;
+            var lineHeight = parseFloat(window.getComputedStyle(parentTitleDom).height) + 25;
+            var lineDom = $api.dom(parentDom,'.line');
+            lineDom.style.left = lineLeft + 'px';
+            lineDom.style.height = lineHeight + 'px';
+            $api.removeCls(lineDom, 'icon-hidden');
+            var childUl = $api.next(parentTitleDom);
+            if (childUl == null) {
+                return;
+            }
+            childUl.style.display = 'block';
+            var childList = $api.domAll(childUl,'li');
+            for(var i = 0;i < childList.length - 1;i++){
+                var childLineDom = $api.dom(childList[i],'.line');
+                var thirdDom = $api.dom(childList[i],'.third');
+                var childLineLeft = parseFloat(window.getComputedStyle(thirdDom).width)/2 - 0.5;
+                var childLineHeight = parseFloat(window.getComputedStyle(childList[i]).height) + 25;
+                childLineDom.style.left = childLineLeft + 'px';
+                childLineDom.style.height = childLineHeight + 'px';
+            }
+        }
+        if (isExpand == isClose) {
+            if (expandArray.indexOf(index) == -1) {
+                expandArray.push(index)
+            }
+        } else {
+            expandArray.remove(index)
+        }
+    }
+
+    function showSectionList(data){
+        var tpl = document.getElementById('conListTpl').innerHTML;
+        list = JSON.parse(JSON.stringify(subjectSectionData[subject]))
+        db.selectSql({
+            name: 'rk',
+            sql: 'SELECT category, count(*) as count FROM question where type = 1 and finish > 0 and subject = ' + subject + ' group by category'
+        }, function(ret, err) {
+            if (ret.status) {
+                var finishList = ret.data;
+
+                for (var i = 0; i < list.length; i++) {
+                    if (isEmpty(list[i].list)) {
+                        list[i].progress = getFinishCount(finishList, list[i].title) + " / " + list[i].progress
+                    } else {
+                        isExpand = false;
+                        var childList = list[i].list
+                        for (var j = 0; j < childList.length; j++) {
+                            childList[j].progress = getFinishCount(finishList, childList[j].title) + " / " + childList[j].progress
+                        }
+                        list[i].progress = sumProgress(childList)
+                    }
+                }
+
+                var html = template(tpl, {list: list, isExpand: isExpand});
+                $api.html($api.byId('content-list'), html);
+                //渲染进度条
+                var conList = $api.byId('content-list');
+                var loadList = $api.domAll(conList, '.loading');
+                for(var i = 0;i < loadList.length;i++){
+                    var loadCon = $api.closest(loadList[i], '.load-container');
+                    var progress = $api.next(loadCon);
+                    var progCon = $api.text(progress);
+                    var progArr = progCon.split('/');
+                    var progWidth = parseFloat(progArr[0])/parseFloat(progArr[1]) * 100;
+                    loadList[i].style.width = progWidth + '%';
+                }
+                for (var i = 0; i < expandArray.length; i++) {
+                    expand(expandArray[i], isExpand)
+                }
+            } else {
+                alert("网络异常,code:175\n请重启APP后再试");
+            }
+        });
+    }
+</script>
+</html>

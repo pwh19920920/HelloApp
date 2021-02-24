@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="copyright" content="www.apicloud.com" />
+<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+<title>软考官网</title>
+<link rel="stylesheet" type="text/css" href="../../css/api.css" />
+<link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+<style>
+html,body{width:100%;min-height:100%;background:#fff;color:#444}
+</style>
+</head>
+<body>
+    <div id="whiteHeader">
+        <header class="aui-bar aui-bar-nav header-gray">
+            <a class="aui-pull-left aui-btn" onclick="goback()">
+                <span class="aui-iconfont aui-icon-left"></span>
+            </a>
+            <div class="aui-title" id="title">软考官网</div>
+        </header>
+    </div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript">
+    function goback(){
+        api.closeWin();
+    }
+
+   apiready = function() {
+        var header = $api.byId('whiteHeader');
+        fixWhiteStatusBar(header);
+        // 接收数据
+        var title = api.pageParam.title;
+        $api.html($api.byId('title'), title);
+
+        var browser = api.require('webBrowser');
+        rect = {
+            x: 0,
+            y: $api.offset(header).h,
+            w: 'auto',
+            h: api.frameHeight - $api.offset(header).h
+        }
+        browser.openView({
+            url:'https://www.ruankao.org.cn/',
+            rect: rect
+        }, function(ret, err) {
+            console.log(JSON.stringify(ret))
+            if (ret.state == 2 && ret.url == 'https://www.ruankao.org.cn/') {
+                browser.loadScript({
+                    script: "location.href = '{0}'".format(api.pageParam.url)
+                });
+            }
+        });
+    };
+</script>
+</html>

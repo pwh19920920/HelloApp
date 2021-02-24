@@ -1,0 +1,318 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width"/>
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>历年真题</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/swiper.min.css" />
+	<style>
+        body,html{background: #fff}
+        #progress{display: none;}
+        .progress{text-align:center;display:table;width:100%;}
+        .progress button{background:white;border-color:#444;height:1.85rem;width:5.2rem;color:#777;font-size:0.7rem;border:1px solid #eee;border-radius:0;}
+        .btn-left{border-top-left-radius:1.5rem!important;border-bottom-left-radius:1.5rem!important;}
+        .btn-right{border-top-right-radius:1.5rem!important;border-bottom-right-radius:1.5rem!important;}
+        .progress-desc{font-size:0.75rem;text-align:left;padding:1.6rem 0 1.1rem 1.3rem;}
+    </style>
+    <style>
+        #whiteHeader{background-image:linear-gradient(to right,#167bea,#46aaea)}
+        .header-gray{background-image:linear-gradient(to right,#167bea,#46aaea);color:white!important;height:2.7rem;line-height:3rem;background-color:unset;}
+        .header-gray .aui-title{color:white!important;font-size:1rem;font-weight:450;}
+        .navbar{display:flex;height:48px;background-image:linear-gradient(to right,#167bea,#46aaea);margin-top:-1px;align-items:center;}
+        .navbar-item{display:block;width:100%;font-size:15px;text-align:center;color:#90c5fe;}
+        .navbar-item-active{color:white;font-weight:450;font-size:17px;}
+        .aui-list{padding:0.75rem;background:none}
+        .aui-list .aui-list-item{background-color:rgb(255,255,255);box-shadow:0 0 18px 0px #dedede;border-radius:14px;overflow:hidden;margin-bottom:0.8rem;background:#fff;display:flex;align-items:center;justify-content:space-between;height:4.4rem;padding-left:0rem;}
+        .aui-list .aui-list-item-inner{padding-left:1rem;font-size:0.85rem;color:#555;justify-content:center;align-items:flex-start;flex-direction:column;}
+        .item-progress{background:#339afe;color:white;padding:2px 10px;border-radius:0 0 7px 7px;font-size:0.6rem;position:absolute;top:0;right:22px;letter-spacing:2px}
+        .item-progress-zero{background:#b1bec0;letter-spacing:0px;padding:2px 14px;}
+        .title{font-size:0.8rem;font-weight:300;color:#000;}
+        .title span{font-weight:400}
+        .detail{background:#ebeef2;color:#808b8f;font-size:0.6rem;padding:4px 12px;border-radius:24px;margin-top:7px;display:flex;justify-content:center;align-items:center;letter-spacing:1px;}
+        .detail img{width:12px;margin-right:5px;}
+        .detail span{color:#449df3}
+    </style>
+
+</head>
+<body>
+    <div id="whiteHeader" style="position: fixed;">
+        <header class="aui-bar aui-bar-nav header-gray">
+            <div class="aui-title" id="title">历年真题</div>
+        </header>
+        <nav class="navbar">
+            <a id="navbar-item-0" class="navbar-item navbar-item-active" onclick="jump(0);">综合</a>
+            <a id="navbar-item-1" class="navbar-item" onclick="jump(1);">案例</a>
+            <a id="navbar-item-2" class="navbar-item" onclick="jump(2);">论文</a>
+        </nav>
+    </div>
+	<div class="aui-content aui-margin-b-10">
+        <div id="page" class="swiper-container">
+            <div id="listSwiper" class="swiper-wrapper" >
+                <div class="swiper-slide">
+                    <ul class="aui-list aui-list-in">
+                        <li class="aui-list-item">
+                            <div class="aui-list-item-inner">
+                                <div class="title">2018年下半年上午真题</div>
+                                <div class="detail">
+                                    <img src="../../image/ic_list_knowledge.png">
+                                    考察了<span>0</span>个考点
+                                </div>
+                            </div>
+                            <div class="item-progress item-progress">1/75</div>
+                        </li>
+                        <li class="aui-list-item">
+                            <div class="aui-list-item-inner">
+                                <div class="title">2018年下半年上午真题</div>
+                                <div class="detail">
+                                    <img src="../../image/ic_list_knowledge.png">
+                                    考察了<span>0</span>个考点
+                                </div>
+                            </div>
+                            <div class="item-progress item-progress-zero">未开始</div>
+                        </li>
+                        <li class="aui-list-item">
+                            <div class="aui-list-item-inner">
+                                <div class="title">2018年下半年上午真题</div>
+                                <div class="detail">
+                                    <img src="../../image/ic_list_knowledge.png">
+                                    考察了<span>0</span>个考点
+                                </div>
+                            </div>
+                            <div class="item-progress item-progress-zero">未开始</div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="swiper-slide">
+                    <ul class="aui-list aui-list-in">
+                        <li class="aui-list-item">
+                            <div class="aui-list-item-inner">
+                                2018年下半年上午真题
+                            </div>
+                            <div class="item-progress item-progress-zero">未开始</div>
+                        </li>
+                        <li class="aui-list-item">
+                            <div class="aui-list-item-inner">
+                                2017年下半年上午真题
+                            </div>
+                            <div class="item-progress item-progress-zero">未开始</div>
+                        </li>
+                        <li class="aui-list-item">
+                            <div class="aui-list-item-inner">
+                                2016年下半年上午真题
+                            </div>
+                            <div class="item-progress">1/75</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</body>
+<div id="progress">
+    <div class="progress">
+        <div class="progress-desc">您上次做到第<span id="progress_num"></span>题，想要继续练习吗？</div>
+        <button class="btn-left" onclick="restart()">重新开始</button>
+        <button class="btn-right" onclick="goon()">继续开始</button>
+    </div>
+</div>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/data.js"></script>
+<script type="text/javascript" src="../../script/layer.js"></script>
+<script type="text/javascript" src="../../script/template.js"></script>
+<script type="text/javascript" src="../../script/swiper.min.js"></script>
+<script type="text/javascript">
+    var db;
+    var layerIndex;
+    var subject;
+    var section;
+    var sectionProgress;
+    var type;
+    var mySwiper;
+    
+    function openLayer(){
+        $api.text($api.byId("progress_num"), sectionProgress);
+        layerIndex = layer.open({
+            type: 1,
+            content: $api.html($api.byId('progress')),
+            anim: 'up',
+            style: 'position:fixed; bottom:0; left:0; width: 100%; height: 7.4rem; border:none;background:#f7f7f7'
+        });
+    }
+
+    function startPractice(sectionTemp) {
+        // 进入练习界面
+        section = sectionTemp;
+        sectionProgress = getProgress(section, type)
+        if (!isEmpty(sectionProgress)) {
+            openLayer()
+        } else {
+            openPracticeWin(sectionProgress, section);
+        }
+    }
+
+    function restart(){
+        layer.close(layerIndex)
+        saveProgress(section, type, "")
+        openPracticeWin(null, section);
+    }
+
+    function goon(){
+        layer.close(layerIndex)
+        openPracticeWin(sectionProgress, section);
+    }
+
+    function openPracticeWin(index, section){
+        var conditionTemp = "section = {0} and subject = {1} and type = {2} order by type, sort_id".format(section, subject, type)
+        api.openWin({
+            name: 'practice',
+            url: './practice.html',
+            pageParam: {
+                condition: conditionTemp,
+                section: section,
+                index: index,
+                type: type
+            },
+            allowEdit: true
+        });
+    }
+
+    apiready = function() {
+        var header = $api.byId('whiteHeader');
+        fixWhiteStatusBar(header);
+
+        var headerH = $api.offset(header).h;
+        $api.css($api.byId('page'),'margin-top:' + eval(headerH + 6)  + "px");
+
+        db = api.require('db');
+        type = get("jumpType", 1)
+
+        initView();
+        initEvent()
+
+    };
+
+    function initEvent(){
+        api.addEventListener({
+            name: 'listRefresh'
+        }, function(ret, err) {
+            initView();
+        });
+        window.addEventListener('scroll', function() {
+            var sTop = document.documentElement.scrollTop || document.body.scrollTop;
+            save(getListScrollTopKey(), sTop);
+        }, false);
+    }
+
+    function jump(typeTemp){
+        type = typeTemp + 1
+        save("jumpType", type)
+        $api.byId('navbar-item-0').className = "navbar-item";
+        $api.byId('navbar-item-1').className = "navbar-item";
+        $api.byId('navbar-item-2').className  = "navbar-item";
+        $api.byId('navbar-item-' + typeTemp).className  = "navbar-item navbar-item-active";
+
+        mySwiper.slideTo(typeTemp, 300, true);
+    }
+
+    function initView(){
+        subject = get("subject")
+        $api.css($api.byId('navbar-item-2'), subject <= 5 ? 'display:block' : 'display:none')
+        var scrollTop = get(getListScrollTopKey());
+
+        $api.html($api.byId('listSwiper'),'')
+        db.selectSql({
+            name: 'rk',
+            sql: 'SELECT section, type, count(*) as count FROM question where subject = ' + subject + ' group by section, type order by section desc'
+        }, function(ret, err) {
+            if (ret.status) {
+                var countList = ret.data;
+
+                db.selectSql({
+                    name: 'rk',
+                    sql: 'SELECT section, type, count(*) as count FROM question where finish > 0 and subject = ' + subject + ' group by section,type order by section desc'
+                }, function(ret, err) {
+                    if (ret.status) {
+                        var finishList = ret.data;
+
+                        for (var i = 0; i < countList.length; i++) {
+                            countList[i].title = getSectionName(countList[i].section, subject, countList[i].type)
+                            countList[i].progress = getFinishCount(finishList, countList[i].section, countList[i].type) + " / " + countList[i].count
+                        }
+                        var tpl = template(document.getElementById('itemsTpl').innerHTML, {list: countList, type : subject <= 5 ? 3 : 2, category: subjectCategoryCount[subject]});
+
+                        $api.html($api.byId('listSwiper'), tpl);
+
+                        mySwiper = new Swiper('.swiper-container', {
+                            onSlideChangeEnd: function(swiper){
+                                jump(swiper.realIndex)
+                                var scrollTop = get(getListScrollTopKey());
+                                document.body.scrollTop = 0
+                            }
+                        })
+                        jump(type - 1)
+                        // 设置滚动条位置
+                        if (isNotEmpty(scrollTop)) {
+                            if (document.documentElement.scrollTop) {
+                                document.documentElement.scrollTop = scrollTop;
+                            } else {
+                                document.body.scrollTop = scrollTop;
+                            }
+                        }
+                    } else {
+                        alert("网络异常,code:175\n请重启APP后再试");
+                    }
+                });
+            } else {
+                alert("网络异常,code:179\n请重启APP后再试");
+            }
+        });
+    }
+
+    function getFinishCount(finishList, section, type){
+        for (var i = 0; i < finishList.length; i++) {
+            if (finishList[i].section == section && finishList[i].type == type) {
+                return finishList[i].count;
+            }
+        }
+        return 0;
+    }
+
+    function getListScrollTopKey(){
+        return 'listScrollTop_' + type + "_" + subject
+    }
+</script>
+<script id="itemsTpl" type="text/html">
+    <%for(var j = 1; j <= type; j++) {%>
+    <div class="swiper-slide">
+        <ul class="aui-list aui-list-in">
+            <%var index = 0;%>
+            <%for(var i = 0; i < list.length; i++) {%>
+                <%if (list[i].type == j) {%>
+                    <li class="aui-list-item" onclick="startPractice(<%:=list[i].section%>, <%:=list[i].type%>)">
+                        <div class="aui-list-item-inner">
+                            <div class="title"><span><%:=list[i].section.substr(0,4)%></span><%:=list[i].title.substr(4)%></div>
+                            <div class="detail">
+                                <img src="../../image/ic_list_knowledge.png">
+                                考察了<span><%:=category[j][index]%></span>个考点
+                            </div>
+                        </div>
+                        <%if (list[i].progress.substr(0,1) == 0) {%>
+                            <div class="item-progress item-progress-zero">未开始</div>
+                        <%} else {%>
+                            <div class="item-progress"><%:=list[i].progress%>%></div>
+                        <%}%>
+                    </li>
+                    <%index++;%>
+                <%}%>
+            <%}%>
+        </ul>
+    </div>
+    <%}%>
+</script>
+</html>

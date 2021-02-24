@@ -1,0 +1,269 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width"/>
+<meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+<title>试题搜索</title>
+<link rel="stylesheet" type="text/css" href="../../css/api.css" />
+<link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+<style>
+    html,body{background-color:#f8f8f8}
+    .aui-searchbar{background-color:white;height:2.6rem;}
+    .aui-searchbar-input{background-color:#ebeced;height:1.6rem;line-height:1.6rem;border-radius:2.25rem;}
+    .aui-searchbar-input input{height:1.6rem}
+    .aui-icon-left{padding-left:0.5rem;font-size:0.8rem;font-weight:400;}
+
+    .item{padding:0.35rem 0.7rem;}
+    .item:active{background: #b9b9b9;}
+    .content{color:#777;font-size:0.7rem;line-height:1.1rem;}
+    .content > span:first{color:#7677fd;margin-right:0.2rem;}
+    .source{font-size:0.6rem;color:#bbb;margin: 0.3rem 0 0.2rem 0.1rem;}
+    .history{background:white;padding-top:15px;padding-left:13px;margin-top:-10px;}
+    .history-title{font-size:15px;line-height:15px;color:#232323;}
+    .history-record{overflow:hidden;padding:12px 0 6px;}
+    .history-record span{margin-right:10px;margin-bottom:9px;padding:0 12px;float:left;font-size:12px;height:26px;line-height:26px;border-radius:12px;color:#686868;white-space:nowrap;text-overflow:ellipsis;background-color:#f0f2f5;overflow:hidden;box-sizing:border-box;display:block;}
+</style>
+
+</head>
+<body>
+    <div id="whiteHeader" style="position: fixed;">
+        <div class="aui-searchbar" id="search">
+            <span class="aui-iconfont aui-icon-left" onclick="goback()"></span>
+            <div class="aui-searchbar-input aui-border-radius">
+                <i class="aui-iconfont aui-icon-search"></i>
+                <input type="search" placeholder="请输入搜索关键词" id="search-input">
+                <div class="aui-searchbar-clear-btn">
+                    <i class="aui-iconfont aui-icon-close"></i>
+                </div>
+            </div>
+            <div class="aui-searchbar-btn" tapmode>取消</div>
+        </div>
+    </div>
+    <div id="wrapper" style="overflow: hidden;padding-top: 2.7rem">
+        <div id="history" class="history">
+            <div class="history-title">最近搜索</div>
+            <div class="history-record" id="historyRecord">
+                <!-- <span>发</span>
+                <span>打水电费给对方</span>
+                <span>水电费水电费水电费水电费是</span> -->
+            </div>
+        </div>
+        <div id="items">
+            <!-- <div class="item">
+                <div class="content">
+                    <span>(单选题)</span>在Excel成绩单工作表中包含了20个同学成绩，C列为成绩值，第一行为标题行，在不改变行列顺序的情况下，在D列统计成绩排名，最优的操作方法是（&nbsp;）。
+                </div>
+                <div class="source">来源：计算机基础</div>
+            </div>
+            <div class="item">
+                <div class="content">
+                    <span>(单选题)</span>先于或随着操作系统的系统文件装入内存储器，从而获得计算机特定控制权并进行传染和破坏的病毒是（&nbsp;）。
+                </div>
+                <div class="source">来源：计算机基础</div>
+            </div>
+            <div class="item">
+                <div class="content">
+                    <span>(单选题)</span>在Excel成绩单工作表中包含了20个同学成绩，C列为成绩值，第一行为标题行，在不改变行列顺序的情况下，在D列统计成绩排名，最优的操作方法是（&nbsp;）。
+                </div>
+                <div class="source">来源：计算机基础</div>
+            </div>
+            <div class="item">
+                <div class="content">
+                    <span>(单选题)</span>设栈的顺序存储空间为S(1:m)，初始状态为top=m+1。现经过一系列正常的入栈与退栈操作后，top=0，则栈中的元素个数为（&nbsp;）。
+                </div>
+                <div class="source">来源：计算机基础</div>
+            </div> -->
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/template.js"></script>
+<script type="text/javascript" src="../../script/data.js"></script>
+<script type="text/javascript">
+    var db; 
+    var subject; 
+    var talkingData;
+
+    function goback() {
+        api.closeWin({
+            name: 'search'
+        });
+    }
+
+    apiready = function() {
+        var header = $api.byId('whiteHeader');
+        fixWhiteStatusBar(header);
+        var headerH = $api.offset(header).h;
+        $api.css($api.byId('wrapper'),'padding-top:' + eval(headerH + 10)  + "px");
+
+        talkingData = api.require('talkingData');
+
+        db = api.require('db');
+        subject = get("subject");
+
+        showHistory()
+    };
+
+    function show(keyword){
+        $api.html($api.byId('items'), "");
+        db.selectSql({
+            name: 'rk',
+            sql: 'SELECT * FROM question where subject = ' + subject + ' and content like "%' + keyword + '%" order by type, section desc'
+        }, function(ret, err) {
+            if (ret.status) {
+                var list = ret.data;
+                if (list.length > 0) {
+                    if (list.length > 200) {
+                        toast("亲，搜索结果过多，请填写更加详细的关键词哦")
+                        return;
+                    }
+                    for (var i = 0; i < list.length; i++) {
+                        list[i].content = list[i].content.replace(/<img [^>]*src=['"]([^'"]+)[^>]*>/gi, '');
+                        try{
+                            list[i].content = list[i].content.replace(new RegExp(keyword,'gi'), function(keyword){
+                                return '<span style="color:#f57d0f">' + keyword + '</span>';
+                            });
+                        } catch (e) {
+                            console.log(e.name + ": " + e.message);
+                        }
+                        list[i].content = trimStart(list[i].content)
+                        list[i].sectionName = getSectionName(list[i].section, subject, list[i].type) 
+                    }
+                    var tpl = template(document.getElementById('itemsTpl').innerHTML, {list: list});
+                    $api.html($api.byId('items'), tpl);
+                } else {
+                    toast("亲，没有搜到相应的题目哦，换个关键词试试吧")
+                }
+            } else {
+                alert("网络异常,code:114\n请重启APP后再试");
+            }
+        });
+
+        talkingData.onEvent({
+            eventId: 'search_keyword',
+            parameters: {
+                keyword: keyword
+            }
+        });
+    }
+
+    function saveHistory(keyword){
+        var data = getHistory();
+        data.remove(keyword);
+        data.splice(0,0,keyword);
+        data = data.slice(0,20)
+        save('historyKeyword', data)
+
+        showHistory(data)
+    }
+
+    function showHistory(data){
+        if (isEmpty(data)) {
+            data = getHistory();
+        }
+        if (data.length == 0) {
+            $api.css($api.byId("history"), 'display:none')
+            return;
+        }
+        $api.html($api.byId('historyRecord'), '')
+        for (var i = 0; i < data.length; i++) {
+            $api.append($api.byId('historyRecord'), '<span onclick="keywordSearch(this)">{0}</span>'.format(data[i]))
+        }
+    }
+
+    function getHistory(){
+        var data = get('historyKeyword');
+        if (isEmpty(data)) {
+            data = '[]';
+        }
+        data = JSON.parse(data)
+        return data;
+    }
+
+    function keywordSearch(ele){
+        var keyword = $api.text(ele);
+        $api.val($api.byId('search-input'), keyword)
+        search()
+    }
+
+    function search(){
+        var keyword = searchBarInput.value;
+        if(keyword.length){
+            searchBarInput.blur();
+            show(keyword)
+            $api.css($api.byId("history"), 'display:none')
+            // 搜索记录
+            saveHistory(keyword)
+        } else {
+            searchBarBtn.style.marginRight = "-"+searchBarBtn.offsetWidth+"px";
+            searchBarInput.value = '';
+            searchBarInput.blur();
+            // 显示原来的页面
+            $api.html($api.byId('items'), "");
+            $api.css($api.byId("history"), 'display:block')
+        }
+    }
+
+    var searchBar = document.querySelector(".aui-searchbar");
+    var searchBarInput = document.querySelector(".aui-searchbar input");
+    var searchBarBtn = document.querySelector(".aui-searchbar .aui-searchbar-btn");
+    var searchBarClearBtn = document.querySelector(".aui-searchbar .aui-searchbar-clear-btn");
+    if(searchBar){
+        searchBarInput.onclick = function(){
+            searchBarBtn.style.marginRight = 0;
+            if(this.value.length){
+                searchBarClearBtn.style.display = 'block';
+                searchBarBtn.textContent = "搜索";
+            }else{
+                searchBarClearBtn.style.display = 'none';
+                searchBarBtn.textContent = "取消";
+            }
+        }
+        searchBarInput.oninput = function(){
+            if(this.value.length){
+                searchBarClearBtn.style.display = 'block';
+                searchBarBtn.textContent = "搜索";
+            }else{
+                searchBarClearBtn.style.display = 'none';
+                searchBarBtn.textContent = "取消";
+            }
+        }
+        searchBarInput.onkeypress = function(event){
+            if (event.keyCode == 13) {
+                search()
+            } 
+        }
+    }
+    searchBarClearBtn.onclick = function(){
+        this.style.display = 'none';
+        searchBarInput.value = '';
+        searchBarBtn.classList.remove("aui-text-info");
+        searchBarBtn.textContent = "取消";
+    }
+    searchBarBtn.onclick = function(){
+        search()
+    }
+</script>
+<script id="itemsTpl" type="text/html">
+    <%for(var i = 0; i < list.length; i++) {%>
+    <div class="item" onclick="openQuestionDetail('<%:=list[i].id%>')">
+        <div class="content">
+            <span>
+                <%if (list[i].type == 1) {%>
+                    (选择)
+                <%} else if (list[i].type == 2){%>
+                    (案例)
+                <%} else {%>
+                    (论文)
+                <%}%>
+            </span>
+            <%:=list[i].content%>
+        </div>
+        <div class="source">来源：<%:=list[i].sectionName%></div>
+    </div>
+    <%}%>
+</script>
+</html>

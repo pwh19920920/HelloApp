@@ -1,0 +1,206 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width"/>
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>设置</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <style>
+        html,body{background-color:#f8f8f8}
+        .aui-list .aui-list-item-right{width:100%;text-align:right;    padding-right: 0.6rem;padding-top: 1px;font-size: 0.7rem;}
+        .aui-img-round{float:right;width: 1.5rem;margin-right: 0.1rem;}
+        .aui-list .aui-list-item-inner{padding-right: 1.3em}
+    </style>
+
+</head>
+<body>
+    <div id="whiteHeader">
+        <header class="aui-bar aui-bar-nav header-gray">
+            <a class="aui-pull-left aui-btn" onclick="goback()">
+                <span class="aui-iconfont aui-icon-left"></span>
+            </a>
+            <div class="aui-title">设置</div>
+        </header>
+    </div>
+    <div class="aui-content aui-margin-b-15">
+        <div class="h10"></div>
+        <ul class="aui-list aui-list-in">
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner aui-list-item-arrow" onclick="clearCache()">
+                    <div class="aui-list-item-title">清理缓存</div>
+                    <div class="aui-list-item-right" id="cache">
+                        1M
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner aui-list-item-arrow" onclick="checkVersion()">
+                    <div class="aui-list-item-title">检查新版本</div>
+                    <div class="aui-list-item-right" id="version">
+                        <!-- 2.4.0 -->
+                    </div>
+                </div>
+            </li>
+        </ul>
+        <div id="developMode" style="display: none">
+            <div class="h10"></div>
+            <ul class="aui-list aui-list-in">
+                <li class="aui-list-item">
+                    <div class="aui-list-item-inner aui-list-item-arrow" onclick="questionSync()">
+                        <div class="aui-list-item-title">做题记录重新同步</div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="h10"></div>
+        <ul class="aui-list aui-list-in">
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner aui-list-item-arrow" onclick="openHomeWin('about')">
+                    <div class="aui-list-item-title">关于软考通</div>
+                </div>
+            </li>
+        </ul>
+        <div class="h10"></div>
+        <ul class="aui-list aui-list-in" id="logout">
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-title" style="text-align: center;" onclick="logout()">退出登录</div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/data.js"></script>
+<script type="text/javascript">
+    var talkingData;
+    var subject;
+
+    function goback() {
+        api.closeWin({name: 'set'});
+    }
+
+    apiready = function() {
+        var header = $api.byId('whiteHeader');
+        fixWhiteStatusBar(header);
+
+        subject = get("subject")
+
+        talkingData = api.require('talkingData');
+        $api.text($api.byId('version'), version);
+
+        var size = api.getCacheSize({sync: true});
+        $api.text($api.byId('cache'), bytesToSize(size));
+
+        var user = getUser()
+        if (isEmpty(user)) {
+            $api.css($api.byId('logout'),'display:none');
+        }
+        // 开发者模式
+        if (get("developMode") == 1) {
+            $api.css($api.byId('developMode'),'display:block');
+        }
+    };
+
+    function clearCache(){
+        api.clearCache(function() {
+            toast('清除缓存完成')
+            $api.text($api.byId('cache'), bytesToSize(0));
+        })
+    }
+
+    function checkVersion(){
+        http('/config/info', 'get', {}, false, function(data){
+            var version = data.version;
+            if (!version.update) {
+                toast("当前已经是最新版本了哦！")
+            } else {
+                api.confirm({
+                    title : '新版本已准备好',
+                    msg : version.desc,
+                    buttons : ['立刻安装', '稍后安装']
+                }, function(ret, err) {
+                    if (ret.buttonIndex == 1) {
+                        if (getPlatform() == 1) {
+                            api.download({
+                                url : version.downloadUrl,
+                                report : true
+                            }, function(ret, err) {
+                                if (ret && 0 == ret.state) {/* 下载进度 */
+                                    api.toast({
+                                        msg : "正在下载应用" + ret.percent + "%",
+                                        duration : 2000
+                                    });
+                                }
+                                if (ret && 1 == ret.state) {/* 下载完成 */
+                                    var savePath = ret.savePath;
+                                    api.installApp({
+                                        appUri : savePath
+                                    });
+                                }
+                            });
+                        }
+                        if (getPlatform() == 2) {
+                            api.installApp({
+                                appUri :  version.downloadUrl
+                            });
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    function logout(){
+       api.actionSheet({
+            cancelTitle: '取消',
+            destructiveTitle: "退出登录",
+            style:{
+                fontNormalColor:'#666'
+            }
+        }, function(ret, err) {
+            var index = ret.buttonIndex;
+            if (index == 1) {
+                saveUser("")
+                save("token","")
+                goback()
+            }
+        });
+    }
+
+    function questionSync(){
+        var fs = api.require('fs');
+        // office判断逻辑
+        var newOffice = getDbName();
+        // 旧的是否存在
+        var oldOffice;
+        for (var i = 0; i < oldOffices.length; i++) {
+            ret = fs.existSync({
+                path: 'box://res/' + oldOffices[i] + '.db'
+            });
+            if (ret.exist) {
+                oldOffice = oldOffices[i];
+                break;
+            }
+        }
+        // 拷贝旧数据
+        if (!isEmpty(oldOffice)) {
+            syncOldDB(newOffice, oldOffice, true);
+        }
+        toast("同步成功！")
+    }
+
+    function bytesToSize(bytes) {
+        if (bytes === 0) return '0 B';
+        var k = 1024;
+        sizes = ['B','KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+        i = Math.floor(Math.log(bytes) / Math.log(k));
+        var num = bytes / Math.pow(k, i);
+        return num.toPrecision(3) + ' ' + sizes[i];
+    }
+</script>
+</html>

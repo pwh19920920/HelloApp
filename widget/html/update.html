@@ -1,0 +1,91 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width"/>
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>版本更新</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+	<link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <style>
+        html,body{background-color:#fafafa;text-align: center;}
+        .grid{display:inline-block;width:240px;height:240px;margin-top:70px;}
+        .desc{color:#777;margin-top:20px}
+        #install{width: 70%;margin-top: 1.4rem}
+    </style>
+</head>
+<body>
+    <div id="whiteHeader">
+        <header class="aui-bar aui-bar-nav header-gray">
+            <a class="aui-pull-left aui-btn" onclick="goback()">
+                <span class="aui-iconfont aui-icon-left"></span>
+            </a>
+            <div class="aui-title">版本更新</div>
+        </header>
+    </div>
+    <div class="grid">
+        <canvas id="progress" width='240' height='240'></canvas>
+    </div>
+    <div id="desc" class="desc">正在下载新版本...</div>
+    <div id="install" class="aui-btn aui-btn-info submit" onclick="install()">立即安装</div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/circleProgress.min.js"></script>
+<script>
+// var progress = new CircleProgress({
+//     element: document.getElementById('progress'),
+// })
+</script>
+<script type="text/javascript">
+    var savePath;
+
+    function goback() {
+        api.closeWin({
+            name: 'update'
+        });
+    }
+
+    apiready = function() {
+        var header = $api.byId('whiteHeader');
+        fixWhiteStatusBar(header);
+
+        var progress = new CircleProgress({
+            element: document.getElementById('progress'),
+            textEnd: '100%'
+        })
+
+        var url = api.pageParam.url
+        api.download({
+            url: url,
+            report: true
+        }, function(ret, err) {
+            if (ret && 0 == ret.state) {/* 下载进度 */
+                progress.draw(ret.percent/100)
+            }
+            if (ret && 1 == ret.state) {/* 下载完成 */
+                $api.css($api.byId('desc'),'display:none');
+                $api.css($api.byId('install'),'display:inline-block');
+
+                savePath = ret.savePath;
+                api.installApp({
+                    appUri : savePath
+                });
+            }
+        });
+
+        api.addEventListener({
+            name: 'keyback'
+        }, function(ret, err) {
+            goback()
+        });
+    };
+
+    function install(){
+        api.installApp({
+            appUri : savePath
+        });
+    }
+</script>
+</html>
